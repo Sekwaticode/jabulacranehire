@@ -1,0 +1,19 @@
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Inter", sans-serif;
+  --font-tight: "Inter Tight", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-poppins: "Poppins", "Inter Tight", sans-serif;
+
+  /* Jabula Crane Hire brand colours, sampled from the JCH logo */
+  --color-jch-bg: #17191c;
+  --color-jch-ink: #f4f2ee;
+  --color-jch-orange: #f7802f;
+  --color-jch-muted: #b9b6af;
+  --color-jch-line: #2c2f34;
+  --color-jch-panel: #1e2125;
+  /* Muted text on light (jch-ink) surfaces */
+  --color-jch-dim: #55585e;
+
+  --ease-jch: cubic-bezier(0.22, 1, 0.36, 1);
+}
