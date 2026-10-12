@@ -85,10 +85,19 @@ export const trustFacts = [
   "Mpumalanga, Gauteng & Limpopo",
 ];
 
+// `image` needs the file's real pixel size so the expanding card can keep the
+// machine's proportions. `uses` is the short list shown in the card dialog;
+// `applications` is the full list on the Equipment page.
 export const equipment = [
   {
     id: "cranes",
     title: "Mobile Cranes",
+    image: {
+      src: "/Liebherr_Crane_Truck.png",
+      width: 612,
+      height: 408,
+      alt: "Yellow mobile crane truck with its boom lowered over the cab",
+    },
     intro:
       "40-ton to 60-ton mobile cranes for lifting, positioning and material handling.",
     specs: [
@@ -102,12 +111,33 @@ export const equipment = [
       "Plant maintenance and shutdowns",
       "Loading and offloading",
     ],
+    applications: [
+      "Construction projects",
+      "Structural steel erection",
+      "Industrial installations",
+      "Plant maintenance",
+      "Machinery positioning",
+      "Equipment installation",
+      "Infrastructure projects",
+      "Warehouse and factory projects",
+      "Roof and structural work",
+      "General heavy lifting",
+      "Loading and offloading",
+      "Maintenance shutdowns",
+      "Engineering projects",
+    ],
     quote: "Not sure",
     note: "Boom length and lifting charts depend on the specific machine.",
   },
   {
     id: "forklifts",
     title: "Forklifts",
+    image: {
+      src: "/Yale_Forklift_in_Industrial_Yard.png",
+      width: 612,
+      height: 408,
+      alt: "Yellow counterbalance forklift with its forks lowered",
+    },
     intro:
       "Forklifts for loading, unloading and moving goods and equipment around your site.",
     specs: [
@@ -121,12 +151,28 @@ export const equipment = [
       "Pallet handling",
       "Loading and unloading",
     ],
+    applications: [
+      "Warehouses",
+      "Construction sites",
+      "Manufacturing facilities",
+      "Industrial facilities",
+      "Loading and unloading",
+      "Pallet handling",
+      "General material movement",
+      "Equipment positioning",
+    ],
     quote: "Forklift",
     note: "",
   },
   {
     id: "telehandlers",
     title: "Telehandlers",
+    image: {
+      src: "/telehandler.png",
+      width: 565,
+      height: 353,
+      alt: "Telehandler with its boom raised and pallet forks fitted",
+    },
     intro:
       "Telescopic boom handlers that combine reach, lifting capacity and mobility.",
     specs: [
@@ -139,6 +185,16 @@ export const equipment = [
       "Construction material handling",
       "Industrial maintenance",
       "Agricultural applications",
+    ],
+    applications: [
+      "Construction material handling",
+      "Loading and unloading",
+      "Elevated material placement",
+      "Building projects",
+      "Industrial maintenance",
+      "Agricultural applications",
+      "Infrastructure projects",
+      "General site material handling",
     ],
     quote: "Telehandler",
     note: "",
@@ -330,5 +386,43 @@ export const about = {
     "Shutdown contractors",
     "Plant hire companies",
     "Other equipment-hire businesses",
+  ],
+};
+
+// Careers page. The teams below describe the kinds of work the company
+// profile mentions; add a photo path to `image` when one is available.
+export const careers = {
+  intro: [
+    "Lifting work depends on the people behind the machines. We look for people who take safety seriously, communicate well and look after the equipment they work with.",
+    "If that sounds like you, get in touch. Tell us what you do, what you are qualified to operate and where you are based.",
+  ],
+  teams: [
+    {
+      name: "Operators",
+      role: "Cranes, forklifts and telehandlers",
+      text: "Our operators run the machines on client sites. They carry out pre-use checks, work within rated capacity, follow site safety rules and stay in contact with the lifting personnel appointed for each job.",
+      image: "",
+    },
+    {
+      name: "Maintenance & Inspections",
+      role: "Keeping the fleet reliable",
+      text: "Clients depend on equipment that is available when they need it. This team handles preventative maintenance and equipment inspections so that machines arrive on site ready to work.",
+      image: "",
+    },
+    {
+      name: "Client Service",
+      role: "Enquiries, quotations and hire support",
+      text: "The first people a client speaks to. They work out what a job needs, recommend suitable equipment, turn quotations around quickly and stay in touch for the whole hire period.",
+      image: "",
+    },
+  ],
+  expectations: [
+    "Follow safe operating procedures.",
+    "Conduct the required pre-use checks.",
+    "Operate equipment within its rated capacity.",
+    "Follow site safety rules.",
+    "Communicate with appointed lifting personnel.",
+    "Report equipment defects or unsafe conditions.",
+    "Maintain professional conduct on client sites.",
   ],
 };

@@ -9,9 +9,9 @@ const navColumns: { heading: string; links: FooterLinkItem[] }[] = [
     links: [
       { label: "Home", href: "/" },
       { label: "About Us", href: "/about" },
-      { label: "Equipment", href: "/#equipment" },
-      { label: "Hire Options", href: "/#hire-options" },
-      { label: "Service Areas", href: "/#service-area" },
+      { label: "Equipment", href: "/equipment" },
+      { label: "Careers", href: "/careers" },
+      { label: "Service Areas", href: "/contact#service-area" },
     ],
   },
   {
@@ -20,7 +20,7 @@ const navColumns: { heading: string; links: FooterLinkItem[] }[] = [
       { label: "Contact Us", href: "/contact" },
       { label: "Request a Quote", href: "/contact#quote" },
       { label: "Company Credentials", href: "/about#credentials" },
-      { label: "FAQs", href: "/#faqs" },
+      { label: "FAQs", href: "/contact#faqs" },
     ],
   },
   {

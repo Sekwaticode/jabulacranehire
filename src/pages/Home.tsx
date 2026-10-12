@@ -7,15 +7,15 @@ import {
   HardHat,
   Phone,
   Pickaxe,
-  Plus,
   Route,
   Tractor,
   Wrench,
 } from "lucide-react";
-import { useState } from "react";
+import { useContext, useState } from "react";
 import ContactDetails from "../components/ContactDetails";
+import EquipmentGrid from "../components/EquipmentGrid";
 import QuoteForm from "../components/QuoteForm";
-import ServiceAreaMap from "../components/ServiceAreaMap";
+import LogoLoop from "../components/ui/LogoLoop";
 import Timeline from "../components/ui/timeline";
 import {
   btn,
@@ -27,16 +27,25 @@ import {
   sectionPad,
 } from "../components/ui/primitives";
 import {
-  equipment,
-  faqs,
   hireOptions,
   industries,
-  reasons,
   safetyChecklist,
   site,
-  TBC,
   trustFacts,
 } from "../data/site";
+import { PageScrollContext } from "../lib/pageScroll";
+
+// Built once: LogoLoop is memoised on its `logos` array. Each fact is followed
+// by a slash from the JCH logo, which separates it from the next one.
+const trustLogos = trustFacts.map((fact) => ({
+  title: fact,
+  node: (
+    <span className="flex items-center gap-9 font-tight font-bold tracking-[0.01em] whitespace-nowrap uppercase">
+      {fact}
+      <span aria-hidden className="h-[0.9em] w-[0.34em] -skew-x-[20deg] bg-jch-bg" />
+    </span>
+  ),
+}));
 
 // Same order as `industries` in site.ts.
 const industryIcons = [
@@ -63,8 +72,9 @@ function CheckItem({ children }: { children: string }) {
 }
 
 export default function Home() {
-  // Shared with the equipment cards so "Get a quote for this" pre-selects it.
+  // Set by the equipment dialog so "Get a quote for this" pre-selects it.
   const [quoteEquipment, setQuoteEquipment] = useState("");
+  const { scrollToHash } = useContext(PageScrollContext);
 
   return (
     <>
@@ -116,17 +126,18 @@ export default function Home() {
       </section>
 
       {/* 2. Trust strip */}
-      <section aria-label="At a glance" className="bg-jch-orange text-jch-bg">
-        <ul className={`${container} grid grid-cols-4 gap-x-8 gap-y-5 py-8 max-[960px]:grid-cols-2 max-[640px]:py-6`}>
-          {trustFacts.map((fact) => (
-            <li
-              key={fact}
-              className="flex items-center border-l-2 border-jch-bg pl-4 font-tight text-lg leading-[1.2] font-bold tracking-[0.01em] uppercase max-[960px]:text-base"
-            >
-              {fact}
-            </li>
-          ))}
-        </ul>
+      <section className="overflow-hidden bg-jch-orange py-7 text-jch-bg max-[640px]:py-5">
+        <LogoLoop
+          logos={trustLogos}
+          speed={70}
+          direction="left"
+          logoHeight={20}
+          gap={36}
+          hoverSpeed={0}
+          fadeOut
+          fadeOutColor="#f7802f"
+          ariaLabel="At a glance"
+        />
       </section>
 
       {/* 3. Our equipment */}
@@ -136,70 +147,18 @@ export default function Home() {
             tone="light"
             eyebrow="Our equipment"
             title="The right machine for the lift"
-            lead="Three equipment types cover most lifting and material-handling work on site. Tell us the job and we will match the machine to it."
+            lead="Three equipment types cover most lifting and material-handling work on site. Open a machine to see what it does and get a quote for it."
           />
-          <div className="grid grid-cols-3 gap-6 max-[1100px]:grid-cols-1">
-            {equipment.map((item) => (
-              <article
-                key={item.id}
-                className="flex flex-col gap-7 rounded-2xl border border-jch-bg/10 bg-white p-9 max-[640px]:p-6"
-              >
-                <div className="flex flex-col gap-3">
-                  <h3 className={h3Class}>{item.title}</h3>
-                  <p className="leading-[1.55] text-jch-dim">{item.intro}</p>
-                </div>
-
-                <dl className="border-t border-jch-bg/15">
-                  {item.specs.map((spec) => (
-                    <div
-                      key={spec.label}
-                      className="flex items-baseline justify-between gap-4 border-b border-jch-bg/15 py-3"
-                    >
-                      <dt className="font-tight font-semibold uppercase">{spec.label}</dt>
-                      <dd className="text-right text-[15px] text-jch-dim">
-                        {"quote" in spec ? (
-                          <a
-                            href="#quote"
-                            onClick={() => setQuoteEquipment(spec.quote)}
-                            className="font-semibold text-jch-bg underline decoration-jch-orange decoration-2 underline-offset-4 hover:decoration-jch-bg"
-                          >
-                            {spec.value || "Check availability"}
-                          </a>
-                        ) : (
-                          spec.value || TBC
-                        )}
-                      </dd>
-                    </div>
-                  ))}
-                </dl>
-
-                <div className="flex flex-col gap-3">
-                  <p className="font-tight text-[13px] font-semibold tracking-[0.12em] text-jch-dim uppercase">
-                    Typical uses
-                  </p>
-                  <ul className="flex flex-col gap-2.5">
-                    {item.uses.map((use) => (
-                      <CheckItem key={use}>{use}</CheckItem>
-                    ))}
-                  </ul>
-                </div>
-
-                <div className="mt-auto flex flex-col gap-3 pt-2">
-                  {item.note && <p className="text-sm leading-[1.5] text-jch-dim">{item.note}</p>}
-                  <a
-                    href="#quote"
-                    onClick={() => setQuoteEquipment(item.quote)}
-                    className={btn.dark}
-                  >
-                    Get a quote for this
-                  </a>
-                </div>
-              </article>
-            ))}
-          </div>
-          <p className="text-jch-dim">
-            Need something else? Other equipment is available on request.
-          </p>
+          <EquipmentGrid
+            onQuote={(value) => {
+              setQuoteEquipment(value);
+              scrollToHash("#quote");
+            }}
+          />
+          <a href="/equipment" className={`${btn.dark} self-start max-[640px]:self-stretch`}>
+            See all equipment
+            <ArrowRight aria-hidden className="size-4" strokeWidth={2.5} />
+          </a>
         </div>
       </section>
 
@@ -225,30 +184,8 @@ export default function Home() {
         </div>
       </section>
 
-      {/* 5. Why choose Jabula */}
-      <section className={`bg-jch-ink text-jch-bg ${sectionPad}`}>
-        <div className={`${container} flex flex-col gap-14`}>
-          <SectionHeading
-            tone="light"
-            eyebrow="Why choose Jabula"
-            title="Practical, dependable equipment hire"
-          />
-          <ol className="grid grid-cols-3 gap-x-10 gap-y-12 max-[960px]:grid-cols-2 max-[560px]:grid-cols-1">
-            {reasons.map((reason, i) => (
-              <li key={reason.title} className="flex flex-col gap-3 border-t-2 border-jch-bg pt-5">
-                <span className="font-poppins text-sm font-semibold text-jch-dim">
-                  {String(i + 1).padStart(2, "0")}
-                </span>
-                <h3 className={h3Class}>{reason.title}</h3>
-                <p className="leading-[1.55] text-jch-dim">{reason.text}</p>
-              </li>
-            ))}
-          </ol>
-        </div>
-      </section>
-
-      {/* 6. Safety & operators */}
-      <section id="safety" className={`bg-jch-bg text-jch-ink ${sectionPad}`}>
+      {/* 5. Safety & operators */}
+      <section id="safety" className={`bg-white text-jch-bg ${sectionPad}`}>
         <div className={`${container} grid grid-cols-2 items-stretch gap-16 max-[960px]:grid-cols-1 max-[960px]:gap-10`}>
           <Photo
             src={site.images.safety}
@@ -258,6 +195,7 @@ export default function Home() {
           />
           <div className="flex flex-col gap-8">
             <SectionHeading
+              tone="light"
               eyebrow="Safety & operators"
               title="Every lift is planned before it is made"
               lead="Safety is a fundamental part of how we work. We make sure the equipment is right for the job and used the way it should be."
@@ -267,20 +205,20 @@ export default function Home() {
                 <CheckItem key={item}>{item}</CheckItem>
               ))}
             </ul>
-            <p className="border-l-2 border-jch-orange pl-5 leading-[1.6] text-jch-muted">
+            <p className="border-l-2 border-jch-orange pl-5 leading-[1.6] text-jch-dim">
               Where we supply an operator, they are competent and appropriately
               qualified for the machine: they run pre-use checks, work within
               rated capacity, follow your site rules and report any defect or
               unsafe condition.
             </p>
-            <a href="/contact#quote" className={`${btn.primary} self-start max-[640px]:self-stretch`}>
+            <a href="/contact#quote" className={`${btn.dark} self-start max-[640px]:self-stretch`}>
               Talk to us about a lift plan
             </a>
           </div>
         </div>
       </section>
 
-      {/* 7. Hire options & how it works */}
+      {/* 6. Hire options & how it works */}
       <section id="hire-options" className={`bg-jch-ink text-jch-bg ${sectionPad}`}>
         <div className={`${container} flex flex-col gap-14`}>
           <SectionHeading
@@ -324,60 +262,8 @@ export default function Home() {
         scroller="#page"
       />
 
-      {/* 8. Service area */}
-      <section id="service-area" className={`bg-jch-ink text-jch-bg ${sectionPad}`}>
-        <div className={`${container} grid grid-cols-2 items-center gap-16 max-[960px]:grid-cols-1 max-[960px]:gap-12`}>
-          <div className="flex flex-col gap-8">
-            <SectionHeading
-              tone="light"
-              eyebrow="Service area"
-              title="Mpumalanga first. Gauteng and Limpopo too."
-              lead="We work from Witbank, so sites across Mpumalanga are our primary service area, with Gauteng and Limpopo also covered."
-            />
-            <p className="max-w-[60ch] leading-[1.6] text-jch-dim">
-              Further afield? Mobilisation outside these provinces can be
-              arranged, subject to project requirements and transport costs.
-            </p>
-            <a href="#quote" className={`${btn.dark} self-start max-[640px]:self-stretch`}>
-              Check if we cover your site
-            </a>
-          </div>
-          <div className="mx-auto w-full max-w-[520px]">
-            <ServiceAreaMap />
-          </div>
-        </div>
-      </section>
-
-      {/* 9. FAQs */}
-      <section id="faqs" className={`bg-white text-jch-bg ${sectionPad}`}>
-        <div className={`${container} grid grid-cols-[1fr_1.4fr] gap-16 max-[960px]:grid-cols-1 max-[960px]:gap-10`}>
-          <SectionHeading
-            tone="light"
-            eyebrow="FAQs"
-            title="Questions we get asked"
-            lead="Can't see yours? Call us and you will get a straight answer."
-          />
-          <div className="border-t border-jch-bg/15">
-            {faqs.map((faq) => (
-              <details key={faq.q} className="group border-b border-jch-bg/15">
-                <summary className="flex cursor-pointer list-none items-center justify-between gap-6 py-6 font-tight text-xl leading-[1.25] font-semibold focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-jch-orange max-[640px]:text-lg [&::-webkit-details-marker]:hidden">
-                  {faq.q}
-                  <Plus
-                    aria-hidden
-                    className="size-6 shrink-0 transition-transform duration-300 ease-jch group-open:rotate-45 motion-reduce:transition-none"
-                  />
-                </summary>
-                <p className="max-w-[62ch] pb-7 text-lg leading-[1.6] text-jch-dim max-[640px]:text-base">
-                  {faq.a}
-                </p>
-              </details>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* 10. Quote request */}
-      <section id="quote" className={`bg-[#0a0a0a] text-jch-ink ${sectionPad}`}>
+      {/* 7. Quote request */}
+      <section id="quote" className={`border-t border-jch-line bg-[#0a0a0a] text-jch-ink ${sectionPad}`}>
         <div className={`${container} grid grid-cols-[1fr_1.15fr] gap-16 max-[960px]:grid-cols-1 max-[960px]:gap-12`}>
           <div className="flex flex-col gap-10">
             <div className="flex flex-col gap-5">

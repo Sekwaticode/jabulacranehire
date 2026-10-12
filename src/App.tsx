@@ -1,4 +1,4 @@
-import { useEffect, useLayoutEffect, useRef, useState } from "react";
+import { useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { SplitText } from "gsap/SplitText";
@@ -10,7 +10,10 @@ import ActionBar from "./components/ActionBar";
 import Home from "./pages/Home";
 import About from "./pages/About";
 import Contact from "./pages/Contact";
+import Equipment from "./pages/Equipment";
+import Careers from "./pages/Careers";
 import { initAnalytics, track } from "./lib/analytics";
+import { PageScrollContext, type PageScroll } from "./lib/pageScroll";
 
 const routes = {
   "/": {
@@ -18,6 +21,11 @@ const routes = {
     title: "Crane Hire, Forklifts & Telehandlers in Mpumalanga | Jabula Crane Hire",
   },
   "/about": { Page: About, title: "About Us | Jabula Crane Hire" },
+  "/equipment": {
+    Page: Equipment,
+    title: "Mobile Cranes, Forklifts & Telehandlers for Hire | Jabula Crane Hire",
+  },
+  "/careers": { Page: Careers, title: "Careers | Jabula Crane Hire" },
   "/contact": {
     Page: Contact,
     title: "Request a Quote or Call Us | Jabula Crane Hire",
@@ -164,6 +172,39 @@ export default function App() {
     lenis.scrollTo(top, { immediate, force: true });
   };
 
+  // Goes to an internal URL: switches page when the path differs, otherwise
+  // scrolls to its hash. The query string is kept for the page to read.
+  const goTo = (target: { pathname: string; search: string; hash: string }) => {
+    setMenu(false);
+
+    const next = toRoute(target.pathname);
+    const url = next + target.search + target.hash;
+    if (next !== routeRef.current) {
+      window.history.pushState(null, "", url);
+      routeRef.current = next;
+      setRoute(next);
+      return;
+    }
+    const { pathname, search, hash } = window.location;
+    if (url !== pathname + search + hash) {
+      window.history.pushState(null, "", url);
+    }
+    scrollToHash(target.hash, false);
+  };
+
+  // These callbacks only read refs, so one object serves every render.
+  const pageScroll = useMemo<PageScroll>(
+    () => ({
+      scroller: pageRef,
+      setLocked: (locked) =>
+        locked ? lenisRef.current?.stop() : lenisRef.current?.start(),
+      scrollToHash: (hash) => scrollToHash(hash, false),
+      navigate: (to) => goTo(new URL(to, window.location.origin)),
+    }),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [],
+  );
+
   // Client-side routing: the navbar, menu and footer use plain <a> links, so
   // internal clicks are picked up here instead of reloading the page.
   useEffect(() => {
@@ -188,20 +229,7 @@ export default function App() {
       if (!isInternal) return;
 
       event.preventDefault();
-      setMenu(false);
-
-      const next = toRoute(link.pathname);
-      const url = next + link.hash;
-      if (next !== routeRef.current) {
-        window.history.pushState(null, "", url);
-        routeRef.current = next;
-        setRoute(next);
-        return;
-      }
-      if (url !== window.location.pathname + window.location.hash) {
-        window.history.pushState(null, "", url);
-      }
-      scrollToHash(link.hash, false);
+      goTo(link);
     };
 
     const onPopState = () => {
@@ -220,7 +248,7 @@ export default function App() {
       document.removeEventListener("click", onClick);
       window.removeEventListener("popstate", onPopState);
     };
-    // setMenu and scrollToHash only read refs, so the first render's copies stay valid.
+    // goTo and scrollToHash only read refs, so the first render's copies stay valid.
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -265,9 +293,11 @@ export default function App() {
         className="fixed top-0 left-0 z-[2] h-svh w-full overflow-x-hidden overflow-y-auto bg-jch-bg will-change-[transform,border-radius]"
       >
         <div ref={contentRef}>
-          <main key={route}>
-            <Page />
-          </main>
+          <PageScrollContext value={pageScroll}>
+            <main key={route}>
+              <Page />
+            </main>
+          </PageScrollContext>
           <Footer />
           {/* Clears the sticky action bar on phones */}
           <div aria-hidden className="h-[calc(60px+env(safe-area-inset-bottom))] bg-jch-bg md:hidden"></div>

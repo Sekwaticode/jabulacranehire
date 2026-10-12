@@ -3,17 +3,17 @@ import type { Ref } from "react";
 const menuColumns = [
   [
     { label: "Home", href: "/" },
-    { label: "Equipment", href: "/#equipment" },
     { label: "About", href: "/about" },
+    { label: "Equipment", href: "/equipment" },
   ],
   [
+    { label: "Careers", href: "/careers" },
     { label: "Contact", href: "/contact" },
     { label: "Request a Quote", href: "/contact#quote" },
-    { label: "FAQs", href: "/#faqs" },
   ],
   [
-    { label: "Hire Options", href: "/#hire-options" },
-    { label: "Service Area", href: "/#service-area" },
+    { label: "FAQs", href: "/contact#faqs" },
+    { label: "Service Area", href: "/contact#service-area" },
     { label: "Call 013 241 1017", href: "tel:+27132411017" },
   ],
 ];

@@ -1,9 +1,10 @@
-import { ArrowRight, Check, Download, Phone } from "lucide-react";
+import { Check, Download } from "lucide-react";
 import PageHeader from "../components/PageHeader";
+import CtaBanner from "../components/sections/CtaBanner";
+import WhyChoose from "../components/sections/WhyChoose";
 import {
   btn,
   container,
-  h2Class,
   SectionHeading,
   sectionPad,
 } from "../components/ui/primitives";
@@ -97,8 +98,10 @@ export default function About() {
         </div>
       </section>
 
+      <WhyChoose />
+
       {/* Who we work with */}
-      <section className={`bg-jch-ink text-jch-bg ${sectionPad}`}>
+      <section className={`bg-white text-jch-bg ${sectionPad}`}>
         <div className={`${container} flex flex-col gap-12`}>
           <SectionHeading
             tone="light"
@@ -119,7 +122,7 @@ export default function About() {
       </section>
 
       {/* Company credentials */}
-      <section id="credentials" className={`bg-white text-jch-bg ${sectionPad}`}>
+      <section id="credentials" className={`bg-jch-ink text-jch-bg ${sectionPad}`}>
         <div className={`${container} grid grid-cols-[1fr_1.4fr] gap-16 max-[960px]:grid-cols-1 max-[960px]:gap-10`}>
           <div className="flex flex-col items-start gap-8">
             <SectionHeading
@@ -157,22 +160,7 @@ export default function About() {
         </div>
       </section>
 
-      {/* Closing banner */}
-      <section className="bg-jch-orange py-20 text-jch-bg max-[640px]:py-14">
-        <div className={`${container} flex flex-wrap items-center justify-between gap-8`}>
-          <h2 className={h2Class}>Need a crane this week?</h2>
-          <div className="flex flex-wrap gap-4 max-[640px]:w-full max-[640px]:flex-col">
-            <a href={site.phone.href} className={btn.onOrangeOutline}>
-              <Phone aria-hidden className="size-4" strokeWidth={2.5} />
-              Call {site.phone.display}
-            </a>
-            <a href="/contact#quote" className={btn.onOrange}>
-              Request a Quote
-              <ArrowRight aria-hidden className="size-4" strokeWidth={2.5} />
-            </a>
-          </div>
-        </div>
-      </section>
+      <CtaBanner />
     </>
   );
 }

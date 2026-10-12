@@ -2,11 +2,19 @@ import { useState } from "react";
 import ContactDetails from "../components/ContactDetails";
 import PageHeader from "../components/PageHeader";
 import QuoteForm from "../components/QuoteForm";
+import Faqs from "../components/sections/Faqs";
+import ServiceArea from "../components/sections/ServiceArea";
 import { container, h2Class } from "../components/ui/primitives";
-import { site } from "../data/site";
+import { equipmentOptions, site } from "../data/site";
+
+// "Get a quote for this" on the Equipment page arrives as ?equipment=<option>.
+function equipmentFromUrl() {
+  const value = new URLSearchParams(window.location.search).get("equipment");
+  return equipmentOptions.find((option) => option === value) ?? "";
+}
 
 export default function Contact() {
-  const [equipment, setEquipment] = useState("");
+  const [equipment, setEquipment] = useState<string>(equipmentFromUrl);
 
   return (
     <>
@@ -52,12 +60,9 @@ export default function Contact() {
         />
       </section>
 
-      <section className="bg-jch-orange py-8 text-jch-bg">
-        <p className={`${container} font-tight text-xl leading-[1.3] font-bold uppercase max-[640px]:text-lg`}>
-          Serving {site.provinces[0]}, {site.provinces[1]} &amp; {site.provinces[2]}.
-          Sites further afield on request.
-        </p>
-      </section>
+      <ServiceArea />
+
+      <Faqs />
     </>
   );
 }
