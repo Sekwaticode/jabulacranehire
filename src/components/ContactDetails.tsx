@@ -1,6 +1,7 @@
 import type { ReactNode } from "react";
 import { Clock, Mail, MapPin, MessageCircle, Phone } from "lucide-react";
-import { site, whatsappUrl } from "../data/site";
+import { useContent } from "../content/ContentContext";
+import { telHref, whatsappUrl } from "../content/links";
 
 const linkClass =
   "font-semibold text-jch-ink transition-colors duration-300 ease-jch hover:text-jch-orange focus-visible:text-jch-orange focus-visible:outline-none";
@@ -31,25 +32,26 @@ function Row({
 
 /** Every way to reach Jabula. `full` adds the address and operating hours. */
 export default function ContactDetails({ full = false }: { full?: boolean }) {
+  const { business: site, contactLabels: labels } = useContent().settings;
   return (
     <ul className="flex flex-col">
-      <Row icon={<Phone />} label="Call the office">
-        <a href={site.phone.href} className={linkClass}>
+      <Row icon={<Phone />} label={labels.office}>
+        <a href={telHref(site.phone.display)} className={linkClass}>
           {site.phone.display}
         </a>
       </Row>
-      <Row icon={<Phone />} label="Mobile and after hours">
-        <a href={site.mobile.href} className={linkClass}>
+      <Row icon={<Phone />} label={labels.mobile}>
+        <a href={telHref(site.mobile.display)} className={linkClass}>
           {site.mobile.display}
         </a>
       </Row>
-      <Row icon={<MessageCircle />} label="WhatsApp">
-        <a href={whatsappUrl()} target="_blank" rel="noopener" className={linkClass}>
-          Chat to us on {site.mobile.display}
+      <Row icon={<MessageCircle />} label={labels.whatsapp}>
+        <a href={whatsappUrl(site)} target="_blank" rel="noopener" className={linkClass}>
+          {labels.whatsappText} {site.mobile.display}
         </a>
       </Row>
       {site.email && (
-        <Row icon={<Mail />} label="Email">
+        <Row icon={<Mail />} label={labels.email}>
           <a href={`mailto:${site.email}`} className={`${linkClass} break-all`}>
             {site.email}
           </a>
@@ -57,7 +59,7 @@ export default function ContactDetails({ full = false }: { full?: boolean }) {
       )}
       {full && (
         <>
-          <Row icon={<MapPin />} label="Address">
+          <Row icon={<MapPin />} label={labels.address}>
             <address className="text-jch-ink not-italic">
               {site.addressLines.map((line) => (
                 <span key={line} className="block">
@@ -66,10 +68,10 @@ export default function ContactDetails({ full = false }: { full?: boolean }) {
               ))}
             </address>
           </Row>
-          <Row icon={<Clock />} label="Operating hours">
+          <Row icon={<Clock />} label={labels.hours}>
             <span className="block text-jch-ink">{site.hours}</span>
             <span className="block text-base text-jch-muted">
-              After hours and emergencies: {site.mobile.display}
+              {labels.afterHours} {site.mobile.display}
             </span>
           </Row>
         </>

@@ -1,43 +1,10 @@
-// Jabula Crane Hire footer. Add social profile links to the Connect column
-// (with `external: true`) once the profiles exist.
+// Jabula Crane Hire footer. Its links and text come from the CMS; social
+// profile links added there join the Connect column.
+
+import { useContent } from "../content/ContentContext";
+import { isExternal, safeHref, safeImageSrc, telHref, whatsappProfileUrl } from "../content/links";
 
 type FooterLinkItem = { label: string; href: string; external?: boolean };
-
-const navColumns: { heading: string; links: FooterLinkItem[] }[] = [
-  {
-    heading: "Company",
-    links: [
-      { label: "Home", href: "/" },
-      { label: "About Us", href: "/about" },
-      { label: "Equipment", href: "/equipment" },
-      { label: "Careers", href: "/careers" },
-      { label: "Service Areas", href: "/contact#service-area" },
-    ],
-  },
-  {
-    heading: "Resources",
-    links: [
-      { label: "Contact Us", href: "/contact" },
-      { label: "Request a Quote", href: "/contact#quote" },
-      { label: "Company Credentials", href: "/about#credentials" },
-      { label: "FAQs", href: "/contact#faqs" },
-    ],
-  },
-  {
-    heading: "Connect",
-    links: [
-      { label: "013 241 1017", href: "tel:+27132411017" },
-      { label: "079 953 4581", href: "tel:+27799534581" },
-      { label: "WhatsApp", href: "https://wa.me/27799534581", external: true },
-    ],
-  },
-];
-
-const legalLinks: FooterLinkItem[] = [
-  { label: "Privacy Notice", href: "/contact#privacy" },
-  { label: "Hire Terms", href: "/#hire-options" },
-  { label: "Health & Safety", href: "/#safety" },
-];
 
 const focusRing =
   "focus-visible:rounded-[2px] focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-jch-orange";
@@ -53,18 +20,20 @@ const linkSizes = {
 function FooterLink({
   link,
   size = "nav",
+  businessName,
 }: {
   link: FooterLinkItem;
   size?: keyof typeof linkSizes;
+  businessName: string;
 }) {
   return (
     <a
-      href={link.href}
+      href={safeHref(link.href)}
       className={`${linkBase} ${linkSizes[size]}`}
       {...(link.external && {
         target: "_blank",
         rel: "noopener",
-        "aria-label": `Jabula Crane Hire on ${link.label} (opens in a new tab)`,
+        "aria-label": `${businessName} on ${link.label} (opens in a new tab)`,
       })}
     >
       {link.label}
@@ -73,6 +42,20 @@ function FooterLink({
 }
 
 export default function Footer() {
+  const { business, footer, brand } = useContent().settings;
+  const navColumns: { heading: string; links: FooterLinkItem[] }[] = [
+    ...footer.columns,
+    {
+      heading: footer.connectHeading,
+      links: [
+        { label: business.phone.display, href: telHref(business.phone.display) },
+        { label: business.mobile.display, href: telHref(business.mobile.display) },
+        { label: footer.whatsappLabel, href: whatsappProfileUrl(business), external: true },
+        ...footer.social.map((link) => ({ ...link, external: isExternal(link.href) })),
+      ],
+    },
+  ];
+
   return (
     <footer className="overflow-hidden bg-jch-bg px-[42px] pt-[66px] pb-16 font-tight text-jch-ink antialiased max-[960px]:px-7 max-[960px]:pt-14 max-[640px]:px-4 max-[640px]:py-12">
       {/* Top: navigation columns + logo */}
@@ -87,7 +70,7 @@ export default function Footer() {
               <ul className="flex flex-col items-start gap-[38px] max-[960px]:gap-[26px] max-[640px]:gap-5">
                 {column.links.map((link) => (
                   <li key={link.label}>
-                    <FooterLink link={link} />
+                    <FooterLink link={link} businessName={business.name} />
                   </li>
                 ))}
               </ul>
@@ -97,14 +80,14 @@ export default function Footer() {
 
         <a
           href="/"
-          aria-label="Jabula Crane Hire home"
+          aria-label={`${business.name} home`}
           className={`w-[clamp(180px,15vw,280px)] shrink-0 transition-opacity duration-300 ease-jch hover:opacity-85 motion-reduce:transition-none max-[640px]:w-40 ${focusRing}`}
         >
           <img
-            src="/logo.png"
+            src={safeImageSrc(brand.logo.src) || "/logo.png"}
             width={4200}
             height={1440}
-            alt="JCH — Jabula Crane Hire logo"
+            alt={brand.footerLogoAlt}
             loading="lazy"
             decoding="async"
             className="block h-auto w-full"
@@ -115,15 +98,14 @@ export default function Footer() {
       {/* Middle: legal + copyright bar */}
       <div className="mt-[150px] flex flex-wrap items-baseline gap-x-[72px] gap-y-4 border-b border-jch-line pb-10 max-[1200px]:gap-x-11 max-[960px]:mt-24 max-[640px]:mt-11 max-[640px]:flex-col max-[640px]:items-start max-[640px]:pb-7">
         <ul className="flex flex-wrap gap-x-[72px] gap-y-4 max-[1200px]:gap-x-11 max-[640px]:gap-x-7 max-[640px]:gap-y-3.5">
-          {legalLinks.map((link) => (
+          {footer.legal.map((link) => (
             <li key={link.label}>
-              <FooterLink link={link} size="legal" />
+              <FooterLink link={link} size="legal" businessName={business.name} />
             </li>
           ))}
         </ul>
         <p className="pb-1 text-[15px] font-medium tracking-[0.01em] uppercase max-[640px]:text-[13px]">
-          Jabula Crane Hire (Pty) Ltd &copy; 2026. Reg. 2026/337560. All
-          rights reserved.
+          {footer.copyright}
         </p>
       </div>
 
@@ -139,14 +121,13 @@ export default function Footer() {
         </p>
         <div className="flex max-w-[440px] flex-col items-start gap-[26px]">
           <p className="text-lg leading-[1.6] font-medium uppercase max-[640px]:text-base">
-            Reliable equipment. Professional service. Safe lifting. Cranes,
-            forklifts and telehandlers for Mpumalanga, Gauteng and Limpopo.
+            {footer.statement}
           </p>
           <a
-            href="/contact#quote"
+            href={safeHref(footer.cta.href)}
             className={`inline-flex min-h-[46px] items-center justify-center rounded-xl bg-jch-ink px-7 py-3 text-sm font-bold tracking-[0.06em] text-jch-bg uppercase transition-[background-color,translate] duration-300 ease-jch hover:-translate-y-0.5 hover:bg-jch-orange motion-reduce:transition-none max-[640px]:min-h-[52px] max-[640px]:w-full ${focusRing}`}
           >
-            Request a Quote
+            {footer.cta.label}
           </a>
         </div>
       </div>

@@ -1,11 +1,10 @@
 import { useContext, useRef, useState } from "react";
 import { AnimatePresence, motion, useScroll, useTransform } from "motion/react";
 import { ArrowLeft, ArrowRight } from "lucide-react";
-import { careers } from "../../data/site";
+import { useContent } from "../../content/ContentContext";
+import { safeImageSrc } from "../../content/links";
 import { PageScrollContext } from "../../lib/pageScroll";
 import { container, focusRing, Photo } from "../ui/primitives";
-
-const TITLE = "The teams behind every safe lift";
 
 const arrowButton = `inline-flex size-11 cursor-pointer items-center justify-center rounded-full border border-jch-muted/50 transition-colors duration-300 ease-jch hover:border-jch-orange hover:bg-jch-orange hover:text-jch-bg motion-reduce:transition-none ${focusRing}`;
 
@@ -13,8 +12,8 @@ export default function Teams() {
   const titleRef = useRef<HTMLHeadingElement>(null);
   const { scroller } = useContext(PageScrollContext);
   const [index, setIndex] = useState(0);
-  const { teams } = careers;
-  const team = teams[index];
+  const { title: TITLE, items: teams } = useContent().pages.careers.sections.teams;
+  const team = teams[Math.min(index, teams.length - 1)];
 
   // The two title lines drift in opposite directions as the section scrolls by.
   const { scrollYProgress } = useScroll({
@@ -27,6 +26,8 @@ export default function Teams() {
 
   const step = (by: number) =>
     setIndex((current) => (current + by + teams.length) % teams.length);
+
+  if (!team) return null;
 
   return (
     <section id="teams" className="bg-jch-bg py-28 text-jch-ink max-[960px]:py-20 max-[640px]:py-16">
@@ -59,8 +60,8 @@ export default function Teams() {
               className="grid grid-cols-[0.8fr_1.2fr] items-stretch gap-14 max-[960px]:grid-cols-1 max-[960px]:gap-8"
             >
               <Photo
-                src={team.image}
-                alt={`The ${team.name} team at Jabula Crane Hire`}
+                src={safeImageSrc(team.image.src)}
+                alt={team.image.alt}
                 caption={team.name}
                 className="min-h-[380px] w-full max-[960px]:min-h-[260px]"
               />

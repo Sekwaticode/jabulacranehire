@@ -1,17 +1,5 @@
-import {
-  ArrowRight,
-  Building2,
-  Check,
-  Cog,
-  Factory,
-  HardHat,
-  Phone,
-  Pickaxe,
-  Route,
-  Tractor,
-  Wrench,
-} from "lucide-react";
-import { useContext, useState } from "react";
+import { ArrowRight, Check, Phone } from "lucide-react";
+import { useContext, useMemo, useState } from "react";
 import ContactDetails from "../components/ContactDetails";
 import EquipmentGrid from "../components/EquipmentGrid";
 import QuoteForm from "../components/QuoteForm";
@@ -26,38 +14,11 @@ import {
   SectionHeading,
   sectionPad,
 } from "../components/ui/primitives";
-import {
-  hireOptions,
-  industries,
-  safetyChecklist,
-  site,
-  trustFacts,
-} from "../data/site";
+import { useContent } from "../content/ContentContext";
+import { industryIcons } from "../content/icons";
+import { safeHref, safeImageSrc, telHref } from "../content/links";
 import { PageScrollContext } from "../lib/pageScroll";
 
-// Built once: LogoLoop is memoised on its `logos` array. Each fact is followed
-// by a slash from the JCH logo, which separates it from the next one.
-const trustLogos = trustFacts.map((fact) => ({
-  title: fact,
-  node: (
-    <span className="flex items-center gap-9 font-tight font-bold tracking-[0.01em] whitespace-nowrap uppercase">
-      {fact}
-      <span aria-hidden className="h-[0.9em] w-[0.34em] -skew-x-[20deg] bg-jch-bg" />
-    </span>
-  ),
-}));
-
-// Same order as `industries` in site.ts.
-const industryIcons = [
-  Pickaxe,
-  HardHat,
-  Cog,
-  Factory,
-  Wrench,
-  Route,
-  Building2,
-  Tractor,
-];
 
 const h3Class =
   "font-tight text-2xl leading-[1.1] font-semibold tracking-[-0.01em] uppercase";
@@ -75,16 +36,36 @@ export default function Home() {
   // Set by the equipment dialog so "Get a quote for this" pre-selects it.
   const [quoteEquipment, setQuoteEquipment] = useState("");
   const { scrollToHash } = useContext(PageScrollContext);
+  const { settings, pages } = useContent();
+  const site = settings.business;
+  const { hero, trust, equipment, industries, safety, hireOptions, process, quote } = pages.home.sections;
+  const heroImage = safeImageSrc(hero.image.src);
+
+  // LogoLoop is memoised on its `logos` array. Each fact is followed by a
+  // slash from the JCH logo, which separates it from the next one.
+  const trustLogos = useMemo(
+    () =>
+      trust.items.map((fact) => ({
+        title: fact,
+        node: (
+          <span className="flex items-center gap-9 font-tight font-bold tracking-[0.01em] whitespace-nowrap uppercase">
+            {fact}
+            <span aria-hidden className="h-[0.9em] w-[0.34em] -skew-x-[20deg] bg-jch-bg" />
+          </span>
+        ),
+      })),
+    [trust.items],
+  );
 
   return (
     <>
       {/* 1. Hero */}
       <section className="relative flex min-h-svh w-full items-end overflow-hidden bg-jch-bg text-jch-ink">
-        {site.images.hero ? (
+        {heroImage ? (
           <>
             <img
-              src={site.images.hero}
-              alt="Mobile crane lifting on site"
+              src={heroImage}
+              alt={hero.image.alt}
               className="absolute inset-0 h-full w-full object-cover"
             />
             <div className="absolute inset-0 bg-linear-to-t from-jch-bg via-jch-bg/70 to-jch-bg/30" />
@@ -104,22 +85,25 @@ export default function Home() {
         )}
 
         <div className={`${container} relative flex flex-col gap-7 pt-44 pb-20 max-[640px]:pb-14`}>
-          <Eyebrow>Witbank-based · {site.provinces.join(", ")}</Eyebrow>
+          {/* Split after the last "· " so the text renders exactly as the original two-part eyebrow did. */}
+          <Eyebrow>
+            {hero.eyebrow.slice(0, hero.eyebrow.lastIndexOf("· ") + 2)}
+            {hero.eyebrow.slice(hero.eyebrow.lastIndexOf("· ") + 2)}
+          </Eyebrow>
           <h1 className="max-w-[1100px] font-tight text-[clamp(2.5rem,6.4vw,6.25rem)] leading-[0.94] font-semibold tracking-[-0.025em] text-balance uppercase">
-            Crane Hire, Forklifts &amp; Telehandlers in Mpumalanga
+            {hero.title}
           </h1>
           <p className="max-w-[46ch] text-xl leading-[1.5] text-jch-muted max-[640px]:text-lg">
-            Mobile cranes up to 60 tons for construction, mining and industrial
-            projects.
+            {hero.lead}
           </p>
           <div className="flex flex-wrap gap-4 max-[640px]:flex-col">
-            <a href="#quote" className={btn.primary}>
-              Request a Quote
+            <a href={safeHref(hero.primary.href)} className={btn.primary}>
+              {hero.primary.label}
               <ArrowRight aria-hidden className="size-4" strokeWidth={2.5} />
             </a>
-            <a href={site.phone.href} className={btn.outline}>
+            <a href={telHref(site.phone.display)} className={btn.outline}>
               <Phone aria-hidden className="size-4" strokeWidth={2.5} />
-              Call Now · {site.phone.display}
+              {`${hero.callLabel} · `}{site.phone.display}
             </a>
           </div>
         </div>
@@ -145,9 +129,9 @@ export default function Home() {
         <div className={`${container} flex flex-col gap-14`}>
           <SectionHeading
             tone="light"
-            eyebrow="Our equipment"
-            title="The right machine for the lift"
-            lead="Three equipment types cover most lifting and material-handling work on site. Open a machine to see what it does and get a quote for it."
+            eyebrow={equipment.eyebrow}
+            title={equipment.title}
+            lead={equipment.lead}
           />
           <EquipmentGrid
             onQuote={(value) => {
@@ -155,8 +139,8 @@ export default function Home() {
               scrollToHash("#quote");
             }}
           />
-          <a href="/equipment" className={`${btn.dark} self-start max-[640px]:self-stretch`}>
-            See all equipment
+          <a href={safeHref(equipment.button.href)} className={`${btn.dark} self-start max-[640px]:self-stretch`}>
+            {equipment.button.label}
             <ArrowRight aria-hidden className="size-4" strokeWidth={2.5} />
           </a>
         </div>
@@ -166,12 +150,12 @@ export default function Home() {
       <section className={`bg-jch-bg text-jch-ink ${sectionPad}`}>
         <div className={`${container} flex flex-col gap-14`}>
           <SectionHeading
-            eyebrow="Industries we serve"
-            title="Built for the sites that keep the region working"
+            eyebrow={industries.eyebrow}
+            title={industries.title}
           />
           <ul className="grid grid-cols-4 gap-px overflow-hidden rounded-2xl border border-jch-line bg-jch-line max-[1100px]:grid-cols-2 max-[520px]:grid-cols-1">
-            {industries.map((industry, i) => {
-              const Icon = industryIcons[i];
+            {industries.items.map((industry) => {
+              const Icon = (industryIcons[industry.icon] ?? industryIcons.wrench).icon;
               return (
                 <li key={industry.name} className="flex flex-col gap-4 bg-jch-bg p-8 max-[640px]:p-6">
                   <Icon aria-hidden className="size-7 text-jch-orange" strokeWidth={1.75} />
@@ -188,31 +172,28 @@ export default function Home() {
       <section id="safety" className={`bg-white text-jch-bg ${sectionPad}`}>
         <div className={`${container} grid grid-cols-2 items-stretch gap-16 max-[960px]:grid-cols-1 max-[960px]:gap-10`}>
           <Photo
-            src={site.images.safety}
-            alt="Operator carrying out a pre-use inspection on a mobile crane"
-            caption="Safety first, on every lift."
+            src={safeImageSrc(safety.photo.src)}
+            alt={safety.photo.alt}
+            caption={safety.caption}
             className="min-h-[460px] w-full max-[960px]:min-h-[300px]"
           />
           <div className="flex flex-col gap-8">
             <SectionHeading
               tone="light"
-              eyebrow="Safety & operators"
-              title="Every lift is planned before it is made"
-              lead="Safety is a fundamental part of how we work. We make sure the equipment is right for the job and used the way it should be."
+              eyebrow={safety.eyebrow}
+              title={safety.title}
+              lead={safety.lead}
             />
             <ul className="grid grid-cols-2 gap-x-8 gap-y-4 text-lg max-[560px]:grid-cols-1">
-              {safetyChecklist.map((item) => (
+              {safety.checklist.map((item) => (
                 <CheckItem key={item}>{item}</CheckItem>
               ))}
             </ul>
             <p className="border-l-2 border-jch-orange pl-5 leading-[1.6] text-jch-dim">
-              Where we supply an operator, they are competent and appropriately
-              qualified for the machine: they run pre-use checks, work within
-              rated capacity, follow your site rules and report any defect or
-              unsafe condition.
+              {safety.operatorNote}
             </p>
-            <a href="/contact#quote" className={`${btn.dark} self-start max-[640px]:self-stretch`}>
-              Talk to us about a lift plan
+            <a href={safeHref(safety.button.href)} className={`${btn.dark} self-start max-[640px]:self-stretch`}>
+              {safety.button.label}
             </a>
           </div>
         </div>
@@ -223,16 +204,16 @@ export default function Home() {
         <div className={`${container} flex flex-col gap-14`}>
           <SectionHeading
             tone="light"
-            eyebrow="Hire options"
-            title="From a single lift to a long-term contract"
-            lead="Flexible hire built around your project. Hire terms are confirmed with your quotation."
+            eyebrow={hireOptions.eyebrow}
+            title={hireOptions.title}
+            lead={hireOptions.lead}
           />
           <div className="grid grid-cols-3 gap-6 max-[960px]:grid-cols-1">
-            {hireOptions.map((option) => (
+            {hireOptions.options.map((option) => (
               <article key={option.title} className="flex flex-col gap-5 rounded-2xl bg-jch-bg p-9 text-jch-ink max-[640px]:p-6">
                 <h3 className={h3Class}>{option.title}</h3>
                 <p className="font-tight text-[13px] font-semibold tracking-[0.12em] text-jch-muted uppercase">
-                  Suitable for
+                  {hireOptions.suitableForLabel}
                 </p>
                 <ul className="flex flex-col gap-2.5">
                   {option.suitableFor.map((item) => (
@@ -242,22 +223,23 @@ export default function Home() {
               </article>
             ))}
           </div>
-          <a href="#quote" className={`${btn.dark} self-start max-[640px]:self-stretch`}>
-            Request a Quote
+          <a href={safeHref(hireOptions.button.href)} className={`${btn.dark} self-start max-[640px]:self-stretch`}>
+            {hireOptions.button.label}
             <ArrowRight aria-hidden className="size-4" strokeWidth={2.5} />
           </a>
         </div>
       </section>
 
       <Timeline
-        title="How a hire works"
-        periodLabel="First call to final lift"
+        title={process.title}
+        periodLabel={process.periodLabel}
+        steps={process.steps}
         textColor="#ffffff"
         mutedTextColor="#a1a1aa"
         activeColor="#f7802f"
         backgroundColor="#0a0a0a"
-        imageUrl="/hero.jpg"
-        imageAlt="Jabula Crane Hire logo"
+        imageUrl={safeImageSrc(process.image.src) || "/hero.jpg"}
+        imageAlt={process.image.alt}
         duration={1.4}
         scroller="#page"
       />
@@ -267,11 +249,10 @@ export default function Home() {
         <div className={`${container} grid grid-cols-[1fr_1.15fr] gap-16 max-[960px]:grid-cols-1 max-[960px]:gap-12`}>
           <div className="flex flex-col gap-10">
             <div className="flex flex-col gap-5">
-              <Eyebrow>Request a quote</Eyebrow>
-              <h2 className={h2Class}>Tell us about the lift</h2>
+              <Eyebrow>{quote.eyebrow}</Eyebrow>
+              <h2 className={h2Class}>{quote.title}</h2>
               <p className="max-w-[48ch] text-lg leading-[1.6] text-jch-muted">
-                Send the basics and we will come back with a suitable machine
-                and a quotation. In a hurry? Call or WhatsApp.
+                {quote.intro}
               </p>
             </div>
             <ContactDetails />

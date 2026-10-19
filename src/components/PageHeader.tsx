@@ -1,3 +1,5 @@
+import { safeImageSrc } from "../content/links";
+import type { Img } from "../content/types";
 import { container, Eyebrow } from "./ui/primitives";
 
 /** Top-of-page banner for About and Contact. Sits behind the fixed navbar,
@@ -6,18 +8,19 @@ export default function PageHeader({
   eyebrow,
   title,
   lead,
-  image = "",
+  image,
 }: {
   eyebrow: string;
   title: string;
   lead: string;
-  image?: string;
+  image?: Img;
 }) {
+  const src = safeImageSrc(image?.src ?? "");
   return (
     <header className="relative overflow-hidden bg-jch-bg text-jch-ink">
-      {image ? (
+      {src ? (
         <>
-          <img src={image} alt="" className="absolute inset-0 h-full w-full object-cover" />
+          <img src={src} alt={image?.alt ?? ""} className="absolute inset-0 h-full w-full object-cover" />
           <div className="absolute inset-0 bg-linear-to-t from-jch-bg via-jch-bg/80 to-jch-bg/50" />
         </>
       ) : (
