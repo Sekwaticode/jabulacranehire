@@ -120,7 +120,7 @@ function AddEquipment({ onClose }: { onClose: () => void }) {
       .from("equipment")
       .insert({
         slug,
-        draft: { title: name, intro: "", image: { src: "", alt: "" }, specs: [], uses: [], applications: [], quote: "", note: "" },
+        draft: { title: name, intro: "", image: { src: "", alt: "" }, specs: [], uses: [], applications: [], quote: name, note: "" },
         draft_sort_order: store.equipment.length,
       })
       .select("id")

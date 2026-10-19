@@ -2,7 +2,7 @@
 // plain text: there are no style, HTML or component controls.
 
 import { ArrowDown, ArrowUp, Plus, Trash2 } from "lucide-react";
-import type { ReactNode } from "react";
+import { createContext, type ReactNode, useContext } from "react";
 import { blank } from "../content/merge";
 import type { Field } from "../content/schema";
 import type { Img, Link } from "../content/types";
@@ -22,7 +22,8 @@ type Props = {
   path?: string;
 };
 
-const fieldId = (path: string) => `f-${path.replace(/[^A-Za-z0-9_-]/g, "-")}`;
+/** Keeps input ids unique when several editors are open on one screen. */
+export const FieldIdPrefix = createContext("f");
 
 function Label({ htmlFor, label, help, required }: { htmlFor: string; label: string; help?: string; required?: boolean }) {
   return (
@@ -166,6 +167,8 @@ function LinkInputs({
 }
 
 export function FieldsEditor({ fields, value, onChange, problems, template, path = "" }: Props) {
+  const prefix = useContext(FieldIdPrefix);
+  const fieldId = (p: string) => `${prefix}-${p.replace(/[^A-Za-z0-9_-]/g, "-")}`;
   const tmpl = (template ?? {}) as Obj;
   const set = (key: string, v: unknown) => onChange({ ...value, [key]: v });
 

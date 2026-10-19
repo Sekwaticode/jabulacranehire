@@ -15,7 +15,7 @@ import {
   saveDraft,
   useStore,
 } from "./data";
-import { FieldsEditor } from "./fields";
+import { FieldIdPrefix, FieldsEditor } from "./fields";
 import { setLeaveGuard } from "./router";
 import { friendlyError } from "./supabase";
 import { Button, Card, formatWhen, Modal, StatusBadge, useConfirm, useToast } from "./ui";
@@ -158,7 +158,9 @@ export function RecordEditor({
           <div className="border-t border-black/10">
             <div className="px-5 py-6">
               {help && <p className="mb-6 rounded-lg bg-black/[0.04] px-4 py-3 text-sm text-jch-dim">{help}</p>}
-              <FieldsEditor fields={item.fields} value={value} onChange={setValue} problems={visibleProblems} template={item.template} />
+              <FieldIdPrefix value={`f${editorId.replace(/[^A-Za-z0-9]/g, "")}`}>
+                <FieldsEditor fields={item.fields} value={value} onChange={setValue} problems={visibleProblems} template={item.template} />
+              </FieldIdPrefix>
             </div>
 
             {visibleProblems.length > 0 && (
