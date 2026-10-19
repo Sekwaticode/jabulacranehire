@@ -49,7 +49,7 @@ export const site = {
 
   /** Site photos. While empty, a branded panel is shown in each slot. */
   images: {
-    hero: "",
+    hero: "/images/hero-site.jpg",
     safety: "",
     about: "",
   },

@@ -116,7 +116,7 @@ export type PageHeaderContent = Heading & { image: Img };
 export type CtaBannerContent = { title: string; callLabel: string; action: Link };
 
 export type HomeSections = {
-  hero: { eyebrow: string; title: string; lead: string; primary: Link; callLabel: string; image: Img };
+  hero: { eyebrow: string; title: string; lead: string; primary: Link; secondary: Link; callLabel: string; image: Img };
   trust: { items: string[] };
   equipment: Heading & { button: Link };
   industries: { eyebrow: string; title: string; items: { name: string; text: string; icon: string }[] };

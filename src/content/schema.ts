@@ -95,8 +95,9 @@ export const pageSchema: Record<PageSlug, { label: string; path: string; section
           t("title", "Main heading", { max: 120 }),
           para("lead", "Intro line", { max: 300 }),
           link("primary", "Main button"),
-          t("callLabel", "Call button words", { max: 40, help: "Shown before the office number." }),
-          image("image", "Background photo", "Optional. Without a photo the orange slashes show."),
+          link("secondary", "Second button"),
+          t("callLabel", "Call link words", { max: 40, help: "Shown before the office number, under the buttons." }),
+          image("image", "Background photo", "Sits behind the crane, darkened. Without a photo the built-in site photo shows."),
         ],
       },
       {

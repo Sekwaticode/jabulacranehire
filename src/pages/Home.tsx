@@ -4,11 +4,13 @@ import ContactDetails from "../components/ContactDetails";
 import EquipmentGrid from "../components/EquipmentGrid";
 import QuoteForm from "../components/QuoteForm";
 import LogoLoop from "../components/ui/LogoLoop";
+import ParallaxScrolling from "../components/ui/parallax-scrolling";
 import Timeline from "../components/ui/timeline";
 import {
   btn,
   container,
   Eyebrow,
+  focusRing,
   h2Class,
   Photo,
   SectionHeading,
@@ -19,6 +21,10 @@ import { industryIcons } from "../content/icons";
 import { safeHref, safeImageSrc, telHref } from "../content/links";
 import { PageScrollContext } from "../lib/pageScroll";
 
+
+// The hero's crane is fixed; its backdrop is the CMS photo, or this one.
+const CRANE_SRC = "/Liebherr_Crane_Truck.png";
+const HERO_FALLBACK_SRC = "/images/hero-site.jpg";
 
 const h3Class =
   "font-tight text-2xl leading-[1.1] font-semibold tracking-[-0.01em] uppercase";
@@ -39,7 +45,7 @@ export default function Home() {
   const { settings, pages } = useContent();
   const site = settings.business;
   const { hero, trust, equipment, industries, safety, hireOptions, process, quote } = pages.home.sections;
-  const heroImage = safeImageSrc(hero.image.src);
+  const heroImage = safeImageSrc(hero.image.src) || HERO_FALLBACK_SRC;
 
   // LogoLoop is memoised on its `logos` array. Each fact is followed by a
   // slash from the JCH logo, which separates it from the next one.
@@ -59,41 +65,62 @@ export default function Home() {
 
   return (
     <>
-      {/* 1. Hero */}
-      <section className="relative flex min-h-svh w-full items-end overflow-hidden bg-jch-bg text-jch-ink">
-        {heroImage ? (
-          <>
-            <img
-              src={heroImage}
-              alt={hero.image.alt}
-              className="absolute inset-0 h-full w-full object-cover"
-            />
-            <div className="absolute inset-0 bg-linear-to-t from-jch-bg via-jch-bg/70 to-jch-bg/30" />
-          </>
-        ) : (
-          <div
-            aria-hidden
-            className="absolute top-[13%] right-[9%] flex gap-[2.2vw] max-[640px]:top-[17%] max-[640px]:right-auto max-[640px]:left-8 max-[640px]:gap-[4vw]"
-          >
-            {[0, 1, 2].map((i) => (
-              <span
-                key={i}
-                className="h-[15vw] w-[5.4vw] -skew-x-[20deg] bg-jch-orange max-[640px]:h-[24vw] max-[640px]:w-[9vw]"
-              />
-            ))}
-          </div>
-        )}
+      {/* 1. Hero. Layers back to front: site photo, haze, crane, ground fade.
+          From 1024px the copy sits left of the crane; below it they stack. */}
+      <ParallaxScrolling
+        scroller="#page"
+        aria-labelledby="hero-title"
+        className="relative isolate flex min-h-svh w-full flex-col overflow-hidden bg-[#0c0d0f] text-jch-ink min-[1024px]:justify-center"
+      >
+        <div
+          aria-hidden
+          data-parallax-layer
+          data-parallax-y="16"
+          className="absolute inset-x-0 -top-[4%] -z-10 h-[116%]"
+        >
+          <img
+            src={heroImage}
+            alt=""
+            fetchPriority="high"
+            decoding="async"
+            className="size-full scale-105 object-cover object-[50%_35%] blur-[1.5px] brightness-[0.5] contrast-[1.2] grayscale-[0.85]"
+          />
+          {/* Overcast sky: heavy at the top, thinning toward the horizon */}
+          <div className="absolute inset-0 bg-linear-to-b from-[#0c0d0f]/85 via-[#0c0d0f]/25 via-45% to-[#0c0d0f]/60" />
+        </div>
 
-        <div className={`${container} relative flex flex-col gap-7 pt-44 pb-20 max-[640px]:pb-14`}>
-          {/* Split after the last "· " so the text renders exactly as the original two-part eyebrow did. */}
-          <Eyebrow>
-            {hero.eyebrow.slice(0, hero.eyebrow.lastIndexOf("· ") + 2)}
-            {hero.eyebrow.slice(hero.eyebrow.lastIndexOf("· ") + 2)}
-          </Eyebrow>
-          <h1 className="max-w-[1100px] font-tight text-[clamp(2.5rem,6.4vw,6.25rem)] leading-[0.94] font-semibold tracking-[-0.025em] text-balance uppercase">
-            {hero.title}
+        <div
+          aria-hidden
+          data-parallax-layer
+          data-parallax-y="8"
+          data-parallax-mobile="off"
+          className="absolute inset-0 -z-10"
+        >
+          {/* Keeps the copy legible: from the left on desktop, from the top below it */}
+          <div className="absolute inset-0 bg-linear-to-r from-[#0c0d0f]/95 via-[#0c0d0f]/70 via-40% to-transparent to-75% max-[1023px]:bg-linear-to-b max-[1023px]:from-[#0c0d0f]/90 max-[1023px]:via-[#0c0d0f]/60 max-[1023px]:via-50%" />
+          {/* Dust hanging low over the site, warmed where the crane stands */}
+          <div className="absolute inset-0 bg-[radial-gradient(ellipse_55%_40%_at_72%_78%,rgba(247,128,47,0.14),transparent_70%),radial-gradient(ellipse_90%_28%_at_55%_92%,rgba(185,182,175,0.1),transparent_70%)] max-[1023px]:bg-[radial-gradient(ellipse_90%_35%_at_60%_85%,rgba(247,128,47,0.14),transparent_70%)]" />
+        </div>
+
+        <div
+          data-parallax-layer
+          data-parallax-y="-12"
+          data-parallax-opacity="0"
+          className={`${container} relative z-30 flex flex-col gap-7 pt-36 pb-16 max-[1023px]:pt-32 max-[1023px]:pb-0 max-[640px]:gap-5 max-[640px]:pt-24`}
+        >
+          <Eyebrow>{hero.eyebrow}</Eyebrow>
+          <h1
+            id="hero-title"
+            className="max-w-[min(640px,44vw)] font-tight text-[clamp(2.5rem,4.6vw,5rem)] leading-[0.95] font-semibold tracking-[-0.025em] text-balance uppercase max-[1023px]:max-w-[640px] max-[640px]:text-[clamp(2rem,9.6vw,2.75rem)]"
+          >
+            {/* One line per sentence; the last one takes the brand orange. */}
+            {hero.title.split(/(?<=\.)\s+/).map((line, i, lines) => (
+              <span key={i} className={`block ${i > 0 && i === lines.length - 1 ? "text-jch-orange" : ""}`}>
+                {line}
+              </span>
+            ))}
           </h1>
-          <p className="max-w-[46ch] text-xl leading-[1.5] text-jch-muted max-[640px]:text-lg">
+          <p className="max-w-[min(46ch,40vw)] text-lg leading-[1.55] text-jch-muted max-[1023px]:max-w-[52ch] max-[640px]:text-base">
             {hero.lead}
           </p>
           <div className="flex flex-wrap gap-4 max-[640px]:flex-col">
@@ -101,13 +128,46 @@ export default function Home() {
               {hero.primary.label}
               <ArrowRight aria-hidden className="size-4" strokeWidth={2.5} />
             </a>
-            <a href={telHref(site.phone.display)} className={btn.outline}>
-              <Phone aria-hidden className="size-4" strokeWidth={2.5} />
-              {`${hero.callLabel} · `}{site.phone.display}
+            <a href={safeHref(hero.secondary.href)} className={btn.outline}>
+              {hero.secondary.label}
             </a>
           </div>
+          {/* Phones already have Call in the bottom action bar */}
+          <a
+            href={telHref(site.phone.display)}
+            className={`inline-flex items-center max-[640px]:hidden gap-2.5 self-start font-tight text-sm font-semibold tracking-[0.06em] text-jch-muted uppercase transition-colors hover:text-jch-orange ${focusRing}`}
+          >
+            <Phone aria-hidden className="size-4 text-jch-orange" strokeWidth={2.5} />
+            {`${hero.callLabel} · `}{site.phone.display}
+          </a>
         </div>
-      </section>
+
+        {/* The crane: beside the copy on desktop, under it below 1024px */}
+        <div
+          data-parallax-layer
+          data-parallax-y="8"
+          className="pointer-events-none absolute right-[-1.5vw] bottom-[8%] w-[min(50vw,940px)] min-[1280px]:w-[min(54vw,1000px)] max-[1023px]:relative max-[1023px]:right-auto max-[1023px]:bottom-auto max-[1023px]:mt-auto max-[1023px]:ml-auto max-[1023px]:w-[min(88vw,640px)] max-[1023px]:translate-x-[3%] max-[1023px]:pt-6 max-[1023px]:pb-[6svh] max-[640px]:w-[100vw] max-[640px]:translate-x-[5%] max-[640px]:pt-2 max-[640px]:pb-[calc(64px+env(safe-area-inset-bottom))]"
+        >
+          <div aria-hidden className="absolute inset-x-[10%] bottom-[4%] h-[9%] rounded-[50%] bg-black/80 blur-2xl max-[1023px]:bottom-[calc(6svh+4%)] max-[640px]:bottom-[calc(64px+4%)]" />
+          <img
+            src={CRANE_SRC}
+            alt="Yellow Liebherr all-terrain mobile crane with its telescopic boom and hook block"
+            width={612}
+            height={408}
+            fetchPriority="high"
+            decoding="async"
+            className="relative h-auto w-full"
+          />
+        </div>
+
+        {/* Ground fade: rises over the crane's base as the page scrolls on */}
+        <div
+          aria-hidden
+          data-parallax-layer
+          data-parallax-y="-62"
+          className="absolute inset-x-0 bottom-0 z-20 h-[70%] translate-y-[62%] bg-linear-to-t from-[#0c0d0f] from-35% via-[#0c0d0f]/70 via-50% to-transparent"
+        />
+      </ParallaxScrolling>
 
       {/* 2. Trust strip */}
       <section className="overflow-hidden bg-jch-orange py-7 text-jch-bg max-[640px]:py-5">

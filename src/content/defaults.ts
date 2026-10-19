@@ -137,12 +137,13 @@ export const defaultContent: SiteContent = {
       seo: { title: "Crane Hire, Forklifts & Telehandlers in Mpumalanga | Jabula Crane Hire", description },
       sections: {
         hero: {
-          eyebrow: `Witbank-based · ${site.provinces.join(", ")}`,
-          title: "Crane Hire, Forklifts & Telehandlers in Mpumalanga",
-          lead: "Mobile cranes up to 60 tons for construction, mining and industrial projects.",
+          eyebrow: "Jabula Crane Hire | Lifting Solutions",
+          title: "Powering Every Lift. Moving Every Project.",
+          lead: "Reliable mobile crane hire and professional lifting solutions for construction, industrial, and infrastructure projects across Mpumalanga, Gauteng, and Limpopo.",
           primary: { label: "Request a Quote", href: "#quote" },
+          secondary: { label: "Explore Our Equipment", href: "#equipment" },
           callLabel: "Call Now",
-          image: { src: site.images.hero, alt: "Mobile crane lifting on site" },
+          image: { src: site.images.hero, alt: "Building under construction" },
         },
         trust: { items: [...trustFacts] },
         equipment: {
