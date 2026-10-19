@@ -38,6 +38,8 @@ export function imageSrcError(src: string): string | null {
   if (!src) return null;
   if (SITE_PATH.test(src) && !src.includes("?")) return null;
   if (src.startsWith("https://")) return linkError(src);
+  // Local development: `supabase start` serves storage over http on localhost.
+  if (/^http:\/\/(localhost|127\.0\.0\.1):\d{1,5}\/storage\/v1\/object\/public\/[^\s<>"'`?#]*$/.test(src)) return null;
   return "Images must come from the media library.";
 }
 
