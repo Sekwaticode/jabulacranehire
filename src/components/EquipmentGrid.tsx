@@ -8,11 +8,11 @@ import {
 import { createPortal } from "react-dom";
 import { AnimatePresence, motion, MotionConfig } from "motion/react";
 import { ArrowRight, Check, ChevronRight, X } from "lucide-react";
-import { equipment, TBC } from "../data/site";
+import { useContent } from "../content/ContentContext";
+import { safeImageSrc } from "../content/links";
+import type { EquipmentItem } from "../content/types";
 import { PageScrollContext } from "../lib/pageScroll";
 import { btn, focusRing } from "./ui/primitives";
-
-type EquipmentItem = (typeof equipment)[number];
 
 // The card and the dialog share `card-<id>` and `image-<id>` layout ids, so
 // Motion morphs one into the other instead of mounting a separate modal.
@@ -36,20 +36,20 @@ function Machine({
   transition: typeof OPEN;
   className: string;
 }) {
-  const ratio = item.image
-    ? item.image.width / item.image.height
-    : PLACEHOLDER_RATIO;
+  const src = safeImageSrc(item.image.src);
+  const { width = 0, height = 0 } = item.image;
+  const ratio = src && width > 0 && height > 0 ? width / height : PLACEHOLDER_RATIO;
   const style = { aspectRatio: ratio, "--ratio": ratio } as CSSProperties;
 
-  if (item.image) {
+  if (src) {
     return (
       <motion.img
         layoutId={`image-${item.id}`}
         transition={transition}
-        src={item.image.src}
+        src={src}
         alt={item.image.alt}
-        width={item.image.width}
-        height={item.image.height}
+        width={width || undefined}
+        height={height || undefined}
         draggable={false}
         style={style}
         className={`h-auto object-contain ${className}`}
@@ -84,6 +84,7 @@ function EquipmentDialog({
   const dialogRef = useRef<HTMLDivElement>(null);
   const closeRef = useRef<HTMLButtonElement>(null);
   const titleId = `equipment-dialog-${item.id}`;
+  const { labels } = useContent().settings;
 
   useEffect(() => {
     closeRef.current?.focus({ preventScroll: true });
@@ -179,19 +180,19 @@ function EquipmentDialog({
                 >
                   <dt className="font-tight font-semibold uppercase">{spec.label}</dt>
                   <dd className="text-right text-[15px] text-jch-muted">
-                    {"quote" in spec ? (
+                    {spec.quote ? (
                       <a
                         href="#quote"
                         onClick={(event) => {
                           event.preventDefault();
-                          onQuote(spec.quote);
+                          onQuote(spec.quote!);
                         }}
                         className={`font-semibold text-jch-ink underline decoration-jch-orange decoration-2 underline-offset-4 hover:text-jch-orange ${focusRing}`}
                       >
-                        {spec.value || "Check availability"}
+                        {spec.value || labels.specQuoteLink}
                       </a>
                     ) : (
-                      spec.value || TBC
+                      spec.value || labels.specFallback
                     )}
                   </dd>
                 </div>
@@ -217,7 +218,7 @@ function EquipmentDialog({
               }}
               className={`${btn.primary} self-start max-[640px]:self-stretch`}
             >
-              Get a quote for this
+              {labels.equipmentQuoteButton}
               <ArrowRight aria-hidden className="size-4" strokeWidth={2.5} />
             </a>
           </motion.div>
@@ -257,6 +258,7 @@ export default function EquipmentGrid({
   const triggers = useRef(new Map<string, HTMLButtonElement>());
   const pendingQuote = useRef<string | null>(null);
   const { setLocked } = useContext(PageScrollContext);
+  const { equipment } = useContent();
   const active = equipment.find((item) => item.id === activeId);
 
   useEffect(() => {

@@ -1,22 +1,6 @@
 import type { Ref } from "react";
-
-const menuColumns = [
-  [
-    { label: "Home", href: "/" },
-    { label: "About", href: "/about" },
-    { label: "Equipment", href: "/equipment" },
-  ],
-  [
-    { label: "Careers", href: "/careers" },
-    { label: "Contact", href: "/contact" },
-    { label: "Request a Quote", href: "/contact#quote" },
-  ],
-  [
-    { label: "FAQs", href: "/contact#faqs" },
-    { label: "Service Area", href: "/contact#service-area" },
-    { label: "Call 013 241 1017", href: "tel:+27132411017" },
-  ],
-];
+import { useContent } from "../content/ContentContext";
+import { safeHref, telHref } from "../content/links";
 
 // `.word` spans are injected by GSAP SplitText, so they're styled from the link.
 // A raw `transform` (not Tailwind's `translate`) so GSAP can animate it.
@@ -24,6 +8,16 @@ const linkClass =
   "block text-[2.5rem] leading-[1.25] font-medium tracking-[-0.01em] text-white no-underline max-[1000px]:text-[1.75rem] [&_.word]:relative [&_.word]:[transform:translateY(100%)] [&_.word]:will-change-transform";
 
 export default function Menu({ ref }: { ref: Ref<HTMLDivElement> }) {
+  const { settings } = useContent();
+  const { columns, callLabel } = settings.navigation;
+  const { phone } = settings.business;
+  // The office number always closes the last column.
+  const menuColumns = columns.map((links, col) =>
+    col === columns.length - 1
+      ? [...links, { label: `${callLabel} ${phone.display}`, href: telHref(phone.display) }]
+      : links,
+  );
+
   return (
     <div
       ref={ref}
@@ -37,7 +31,7 @@ export default function Menu({ ref }: { ref: Ref<HTMLDivElement> }) {
             className="flex h-full flex-1 flex-col justify-center"
           >
             {links.map((link) => (
-              <a key={link.label} href={link.href} className={linkClass}>
+              <a key={link.label} href={safeHref(link.href)} className={linkClass}>
                 {link.label}
               </a>
             ))}

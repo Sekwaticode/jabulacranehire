@@ -1,26 +1,24 @@
+import { useContent } from "../../content/ContentContext";
+import { safeHref } from "../../content/links";
 import ServiceAreaMap from "../ServiceAreaMap";
 import { btn, container, SectionHeading, sectionPad } from "../ui/primitives";
 
-export default function ServiceArea({
-  cta = { label: "Check if we cover your site", href: "#quote" },
-}: {
-  cta?: { label: string; href: string };
-}) {
+export default function ServiceArea() {
+  const { eyebrow, title, lead, note, button: cta } = useContent().pages.contact.sections.serviceArea;
   return (
     <section id="service-area" className={`bg-jch-ink text-jch-bg ${sectionPad}`}>
       <div className={`${container} grid grid-cols-2 items-center gap-16 max-[960px]:grid-cols-1 max-[960px]:gap-12`}>
         <div className="flex flex-col gap-8">
           <SectionHeading
             tone="light"
-            eyebrow="Service area"
-            title="Mpumalanga first. Gauteng and Limpopo too."
-            lead="We work from Witbank, so sites across Mpumalanga are our primary service area, with Gauteng and Limpopo also covered."
+            eyebrow={eyebrow}
+            title={title}
+            lead={lead}
           />
           <p className="max-w-[60ch] leading-[1.6] text-jch-dim">
-            Further afield? Mobilisation outside these provinces can be
-            arranged, subject to project requirements and transport costs.
+            {note}
           </p>
-          <a href={cta.href} className={`${btn.dark} self-start max-[640px]:self-stretch`}>
+          <a href={safeHref(cta.href)} className={`${btn.dark} self-start max-[640px]:self-stretch`}>
             {cta.label}
           </a>
         </div>
