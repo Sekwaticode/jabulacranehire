@@ -4,27 +4,25 @@ import EquipmentGrid from "../components/EquipmentGrid";
 import PageHeader from "../components/PageHeader";
 import CtaBanner from "../components/sections/CtaBanner";
 import { container, SectionHeading, sectionPad } from "../components/ui/primitives";
-import { equipment } from "../data/site";
+import { useContent } from "../content/ContentContext";
 import { PageScrollContext } from "../lib/pageScroll";
 
 export default function Equipment() {
   const { navigate } = useContext(PageScrollContext);
+  const { equipment, pages } = useContent();
+  const { header, fleet, applications, cta } = pages.equipment.sections;
 
   return (
     <>
-      <PageHeader
-        eyebrow="Equipment"
-        title="Cranes, Forklifts & Telehandlers for Hire"
-        lead="40-ton to 60-ton mobile cranes, supported by forklifts and telescopic boom handlers. Open a machine to see what it does and get a quote for it."
-      />
+      <PageHeader {...header} />
 
       <section id="fleet" className={`bg-jch-ink text-jch-bg ${sectionPad}`}>
         <div className={`${container} flex flex-col gap-14`}>
           <SectionHeading
             tone="light"
-            eyebrow="Our equipment"
-            title="The right machine for the lift"
-            lead="Specifications, boom lengths, lifting charts and availability depend on the specific machine and your project, and are confirmed with your quote."
+            eyebrow={fleet.eyebrow}
+            title={fleet.title}
+            lead={fleet.lead}
           />
           <EquipmentGrid
             onQuote={(value) =>
@@ -37,8 +35,8 @@ export default function Equipment() {
       <section className={`bg-jch-bg text-jch-ink ${sectionPad}`}>
         <div className={`${container} flex flex-col gap-14`}>
           <SectionHeading
-            eyebrow="Applications"
-            title="What each machine is used for"
+            eyebrow={applications.eyebrow}
+            title={applications.title}
           />
           <div className="grid grid-cols-3 gap-6 max-[960px]:grid-cols-1">
             {equipment.map((item) => (
@@ -61,13 +59,12 @@ export default function Equipment() {
             ))}
           </div>
           <p className="max-w-[70ch] text-lg leading-[1.6] text-jch-muted">
-            Need something that is not listed? Other equipment is available on
-            request, and we keep adding to the fleet as clients need it.
+            {applications.footnote}
           </p>
         </div>
       </section>
 
-      <CtaBanner title="Not sure which machine you need?" />
+      <CtaBanner {...cta} />
     </>
   );
 }

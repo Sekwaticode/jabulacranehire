@@ -1,14 +1,15 @@
-import { reasons } from "../../data/site";
+import { useContent } from "../../content/ContentContext";
 import { container, SectionHeading, sectionPad } from "../ui/primitives";
 
 export default function WhyChoose() {
+  const { eyebrow, title, reasons } = useContent().pages.about.sections.whyChoose;
   return (
     <section id="why-jabula" className={`bg-jch-ink text-jch-bg ${sectionPad}`}>
       <div className={`${container} flex flex-col gap-14`}>
         <SectionHeading
           tone="light"
-          eyebrow="Why choose Jabula"
-          title="Practical, dependable equipment hire"
+          eyebrow={eyebrow}
+          title={title}
         />
         <ol className="grid grid-cols-3 gap-x-10 gap-y-12 max-[960px]:grid-cols-2 max-[560px]:grid-cols-1">
           {reasons.map((reason, i) => (

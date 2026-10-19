@@ -1,11 +1,8 @@
 import { type FormEvent, type ReactNode, useState } from "react";
 import { ArrowRight, Check } from "lucide-react";
-import {
-  durationOptions,
-  equipmentOptions,
-  site,
-  whatsappUrl,
-} from "../data/site";
+import { equipmentOptions, useContent } from "../content/ContentContext";
+import { telHref, whatsappUrl } from "../content/links";
+import { site as developerSettings } from "../data/site";
 import { track } from "../lib/analytics";
 import { btn } from "./ui/primitives";
 
@@ -71,7 +68,14 @@ export default function QuoteForm({
   const [status, setStatus] = useState<"idle" | "sending" | "sent" | "error">(
     "idle",
   );
-  const viaEmail = Boolean(site.quoteFormEndpoint);
+  const content = useContent();
+  const { business } = content.settings;
+  const { durationOptions, notSureOption } = content.settings.quoteForm;
+  const options = equipmentOptions(content.equipment, notSureOption);
+  // The form's email endpoint is a developer setting, not CMS content.
+  const endpoint = developerSettings.quoteFormEndpoint;
+  const viaEmail = Boolean(endpoint);
+  const phone = { display: business.phone.display, href: telHref(business.phone.display) };
   const id = (name: string) => `${idPrefix}-${name}`;
 
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
@@ -84,7 +88,7 @@ export default function QuoteForm({
         .filter(([, value]) => value)
         .map(([label, value]) => `${label}: ${value}`);
       window.open(
-        whatsappUrl(`Hi Jabula, I'd like a quote.\n\n${lines.join("\n")}`),
+        whatsappUrl(business, `Hi Jabula, I'd like a quote.\n\n${lines.join("\n")}`),
         "_blank",
         "noopener",
       );
@@ -95,7 +99,7 @@ export default function QuoteForm({
 
     setStatus("sending");
     try {
-      const response = await fetch(site.quoteFormEndpoint, {
+      const response = await fetch(endpoint, {
         method: "POST",
         body: data,
         headers: { Accept: "application/json" },
@@ -122,8 +126,8 @@ export default function QuoteForm({
             ? "Your quote request has reached our sales team and we will get back to you shortly."
             : "WhatsApp has opened with your request filled in. Press send to reach our team, and add any drawings or site photos in the chat."}{" "}
           Need an answer right now? Call{" "}
-          <a href={site.phone.href} className="font-semibold text-jch-ink underline decoration-jch-orange underline-offset-4">
-            {site.phone.display}
+          <a href={phone.href} className="font-semibold text-jch-ink underline decoration-jch-orange underline-offset-4">
+            {phone.display}
           </a>
           .
         </p>
@@ -165,7 +169,7 @@ export default function QuoteForm({
           <option value="" disabled>
             Select equipment
           </option>
-          {equipmentOptions.map((option) => (
+          {options.map((option) => (
             <option key={option}>{option}</option>
           ))}
         </select>
@@ -241,8 +245,8 @@ export default function QuoteForm({
         {status === "error" && (
           <p role="alert" className="rounded-lg border border-jch-orange px-4 py-3 text-base">
             Your request did not go through. Please try again, or call{" "}
-            <a href={site.phone.href} className="font-semibold underline underline-offset-4">
-              {site.phone.display}
+            <a href={phone.href} className="font-semibold underline underline-offset-4">
+              {phone.display}
             </a>
             .
           </p>

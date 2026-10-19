@@ -1,21 +1,22 @@
 import { useState } from "react";
 import { AnimatePresence, motion, useReducedMotion } from "motion/react";
 import { Plus } from "lucide-react";
-import { faqs } from "../../data/site";
+import { useContent } from "../../content/ContentContext";
 import { container, SectionHeading, sectionPad } from "../ui/primitives";
 
 export default function Faqs() {
   const [openIndex, setOpenIndex] = useState<number | null>(null);
   const reducedMotion = useReducedMotion();
+  const { eyebrow, title, lead, items: faqs } = useContent().pages.contact.sections.faqs;
 
   return (
     <section id="faqs" className={`bg-white text-jch-bg ${sectionPad}`}>
       <div className={`${container} flex flex-col gap-14 max-[640px]:gap-10`}>
         <SectionHeading
           tone="light"
-          eyebrow="FAQs"
-          title="Questions we get asked"
-          lead="Can't see yours? Call us and you will get a straight answer."
+          eyebrow={eyebrow}
+          title={title}
+          lead={lead}
         />
 
         <div>

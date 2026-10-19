@@ -4,6 +4,7 @@
 import {
   type CSSProperties,
   useLayoutEffect,
+  useMemo,
   useRef,
   useSyncExternalStore,
 } from "react";
@@ -81,6 +82,8 @@ export type TimelineProps = {
   scrollDuration?: number;
   /** Scroll container to watch (selector or element). Defaults to the window. */
   scroller?: string | Element;
+  /** The seven steps, in order. */
+  steps: { title: string; content: string }[];
 };
 
 /* Resolve against the whole document: selector text inside a gsap.context
@@ -120,58 +123,22 @@ function usePrefersReducedMotion() {
 }
 
 // The steps alternate above and below the line: odd steps on top, even below.
-const topJourneyData: JourneyItem[] = [
-  {
-    id: "step-01",
-    step: "01",
-    title: "Tell us the lift",
-    content: "Share the load, the site and your dates by phone, WhatsApp or the quote form",
-  },
-  {
-    id: "step-03",
-    step: "03",
-    title: "You get a quote",
-    content: "A quotation covering the equipment, the hire period and transport to site",
-  },
-  {
-    id: "step-05",
-    step: "05",
-    title: "Checks before the lift",
-    content: "Pre-use inspections and your site safety requirements come first",
-  },
-  {
-    id: "step-07",
-    step: "07",
-    title: "We support you on site",
-    content: "Prompt communication and dependable support for the whole hire period",
-  },
-];
+// The layout and scroll positions are built for exactly seven steps.
+export const TIMELINE_STEPS = 7;
 
-const bottomJourneyData: JourneyItem[] = [
-  {
-    id: "step-02",
-    step: "02",
-    title: "We recommend the machine",
-    content: "We match a crane, forklift or telehandler to your load and site",
-  },
-  {
-    id: "step-04",
-    step: "04",
-    title: "We confirm and mobilise",
-    content: "Once you confirm, we schedule the machine and move it to your site",
-  },
-  {
-    id: "step-06",
-    step: "06",
-    title: "The work gets done",
-    content: "Equipment runs within its rated capacity and your site rules",
-  },
-];
-
-const allJourneyItems: JourneyItem[] = [
-  ...topJourneyData,
-  ...bottomJourneyData,
-].sort((a, b) => Number(a.step) - Number(b.step));
+function splitSteps(steps: { title: string; content: string }[]) {
+  const all: JourneyItem[] = steps.slice(0, TIMELINE_STEPS).map((step, i) => ({
+    id: `step-0${i + 1}`,
+    step: `0${i + 1}`,
+    title: step.title,
+    content: step.content,
+  }));
+  return {
+    all,
+    top: all.filter((_, i) => i % 2 === 0),
+    bottom: all.filter((_, i) => i % 2 === 1),
+  };
+}
 
 export default function Timeline({
   title = "Product Storyline",
@@ -185,7 +152,12 @@ export default function Timeline({
   duration,
   scrollDuration = 1.2,
   scroller,
+  steps,
 }: TimelineProps) {
+  const { all: allJourneyItems, top: topJourneyData, bottom: bottomJourneyData } = useMemo(
+    () => splitSteps(steps),
+    [steps],
+  );
   const sectionRef = useRef<HTMLElement>(null);
   const wholeSliderRef = useRef<HTMLDivElement>(null);
   const reducedMotion = usePrefersReducedMotion();
@@ -403,7 +375,7 @@ export default function Timeline({
       window.removeEventListener("resize", handleResize);
     };
   }, {
-    dependencies: [normalizedDuration, reducedMotion, scroller],
+    dependencies: [normalizedDuration, reducedMotion, scroller, allJourneyItems],
     scope: sectionRef,
   });
 

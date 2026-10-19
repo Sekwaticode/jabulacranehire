@@ -1,4 +1,6 @@
 import type { RefObject } from "react";
+import { useContent } from "../content/ContentContext";
+import { safeImageSrc } from "../content/links";
 
 type NavbarProps = {
   isMenuOpen: boolean;
@@ -15,13 +17,14 @@ export default function Navbar({
   logoRef,
   togglerRef,
 }: NavbarProps) {
+  const { logo } = useContent().settings.brand;
   return (
     <nav className="fixed top-0 left-0 z-10 flex w-full items-center justify-between p-6 mix-blend-difference">
       <div ref={logoRef} className="w-32 cursor-pointer p-4 will-change-transform">
         <a href="/">
           <img
-            src="/logo.png"
-            alt="Jabula Crane Hire"
+            src={safeImageSrc(logo.src) || "/logo.png"}
+            alt={logo.alt}
             className="h-full w-full object-cover"
           />
         </a>

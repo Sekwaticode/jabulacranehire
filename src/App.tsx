@@ -1,4 +1,4 @@
-import { useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
+import { type JSX, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { SplitText } from "gsap/SplitText";
@@ -14,23 +14,17 @@ import Equipment from "./pages/Equipment";
 import Careers from "./pages/Careers";
 import { initAnalytics, track } from "./lib/analytics";
 import { PageScrollContext, type PageScroll } from "./lib/pageScroll";
+import { useContent } from "./content/ContentContext";
+import type { PageSlug } from "./content/types";
 
+// Page titles and descriptions come from the CMS (`seo` on each page).
 const routes = {
-  "/": {
-    Page: Home,
-    title: "Crane Hire, Forklifts & Telehandlers in Mpumalanga | Jabula Crane Hire",
-  },
-  "/about": { Page: About, title: "About Us | Jabula Crane Hire" },
-  "/equipment": {
-    Page: Equipment,
-    title: "Mobile Cranes, Forklifts & Telehandlers for Hire | Jabula Crane Hire",
-  },
-  "/careers": { Page: Careers, title: "Careers | Jabula Crane Hire" },
-  "/contact": {
-    Page: Contact,
-    title: "Request a Quote or Call Us | Jabula Crane Hire",
-  },
-};
+  "/": { Page: Home, slug: "home" },
+  "/about": { Page: About, slug: "about" },
+  "/equipment": { Page: Equipment, slug: "equipment" },
+  "/careers": { Page: Careers, slug: "careers" },
+  "/contact": { Page: Contact, slug: "contact" },
+} satisfies Record<string, { Page: () => JSX.Element; slug: PageSlug }>;
 
 type RoutePath = keyof typeof routes;
 
@@ -64,6 +58,7 @@ export default function App() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [route, setRoute] = useState(() => toRoute(window.location.pathname));
   const routeRef = useRef(route);
+  const content = useContent();
 
   // Smooth scrolling, menu word splitting, and hide-nav-on-scroll.
   useLayoutEffect(() => {
@@ -254,8 +249,10 @@ export default function App() {
 
   // On every page change: set the title, reset the scroll, then honour a hash.
   useEffect(() => {
-    document.title = routes[route].title;
-    track("page_view", { page_path: route, page_title: routes[route].title });
+    const { seo } = content.pages[routes[route].slug];
+    document.title = seo.title;
+    document.querySelector('meta[name="description"]')?.setAttribute("content", seo.description);
+    track("page_view", { page_path: route, page_title: seo.title });
 
     lenisRef.current?.resize();
     lenisRef.current?.scrollTo(0, { immediate: true, force: true });
