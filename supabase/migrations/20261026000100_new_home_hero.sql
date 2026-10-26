@@ -22,7 +22,7 @@ as $$
   from (
     select
       jsonb_build_object(
-        'highlights', '["Qualified Operators","Daily to Long-Term Hire","Anywhere in South Africa"]'::jsonb,
+        'highlights', '["Qualified Operators","Daily to Long-Term Hire","Safety-First Lifting"]'::jsonb,
         'equipmentCard', jsonb_build_object(
           'title', 'Cranes, forklifts and telehandlers for every lift.',
           'link', coalesce(doc -> 'secondary', '{"label":"Explore Our Equipment","href":"#equipment"}'::jsonb),

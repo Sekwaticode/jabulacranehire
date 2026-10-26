@@ -30,7 +30,8 @@ export function PageEditor({ slug }: { slug: PageSlug }) {
             {slug === "home" && (
               <>
                 {" "}
-                Equipment cards come from <Link href="/admin/equipment" className="underline">Equipment</Link>.
+                Equipment cards come from <Link href="/admin/equipment" className="underline">Equipment</Link>. The “Who we are” text
+                under the scrolling strip is edited on the <Link href="/admin/pages/about#intro" className="underline">About</Link> page.
               </>
             )}
           </>

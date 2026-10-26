@@ -81,7 +81,6 @@ export const trustFacts = [
   "Up to 60-ton capacity",
   "Operators available",
   "Daily to long-term hire",
-  "Anywhere in South Africa",
 ];
 
 // `image` needs the file's real pixel size so the expanding card can keep the
@@ -327,10 +326,6 @@ export const faqs = [
   {
     q: "What do you need from me for a quote?",
     a: "The load weight and dimensions, the site location, your dates and how long you need the machine. Drawings or site photos help. If your site has its own safety or induction requirements, tell us up front so we can plan for them.",
-  },
-  {
-    q: "Which areas do you cover?",
-    a: "We work anywhere in South Africa. We are based in Witbank, and transport to your site is quoted with the hire.",
   },
   {
     q: "Can you help plan the lift?",

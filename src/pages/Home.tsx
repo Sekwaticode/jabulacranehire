@@ -4,6 +4,7 @@ import ContactDetails from "../components/ContactDetails";
 import EquipmentGrid from "../components/EquipmentGrid";
 import QuoteForm from "../components/QuoteForm";
 import Hero from "../components/sections/Hero";
+import WhoWeAre from "../components/sections/WhoWeAre";
 import LogoLoop from "../components/ui/LogoLoop";
 import Reveal from "../components/ui/Reveal";
 import Timeline from "../components/ui/timeline";
@@ -76,7 +77,10 @@ export default function Home() {
         />
       </section>
 
-      {/* 3. Our equipment */}
+      {/* 3. Who we are (text edited on the About page) */}
+      <WhoWeAre tone="dark" />
+
+      {/* 4. Our equipment */}
       <section id="equipment" className={`bg-jch-ink text-jch-bg ${sectionPad}`}>
         <div className={`${container} flex flex-col gap-14`}>
           <SectionHeading
@@ -98,7 +102,7 @@ export default function Home() {
         </div>
       </section>
 
-      {/* 4. Industries we serve */}
+      {/* 5. Industries we serve */}
       <section className={`bg-jch-bg text-jch-ink ${sectionPad}`}>
         <div className={`${container} flex flex-col gap-14`}>
           <SectionHeading
@@ -145,7 +149,7 @@ export default function Home() {
         </div>
       </section>
 
-      {/* 5. Safety & operators */}
+      {/* 6. Safety & operators */}
       <section id="safety" className={`bg-white text-jch-bg ${sectionPad}`}>
         <div className={`${container} grid grid-cols-2 items-stretch gap-16 max-[960px]:grid-cols-1 max-[960px]:gap-10`}>
           <Photo
@@ -176,7 +180,7 @@ export default function Home() {
         </div>
       </section>
 
-      {/* 6. Hire options & how it works */}
+      {/* 7. Hire options & how it works */}
       <section id="hire-options" className={`bg-jch-ink text-jch-bg ${sectionPad}`}>
         <div className={`${container} flex flex-col gap-14`}>
           <SectionHeading
@@ -221,7 +225,7 @@ export default function Home() {
         scroller="#page"
       />
 
-      {/* 7. Quote request */}
+      {/* 8. Quote request */}
       <section id="quote" className={`border-t border-jch-line bg-[#0a0a0a] text-jch-ink ${sectionPad}`}>
         <Reveal stagger={0.15} className={`${container} grid grid-cols-[1fr_1.15fr] gap-16 max-[960px]:grid-cols-1 max-[960px]:gap-12`}>
           <div className="flex flex-col gap-10">

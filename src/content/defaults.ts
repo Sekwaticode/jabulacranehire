@@ -20,7 +20,7 @@ import {
 import type { SiteContent } from "./types";
 
 const description =
-  "Jabula Crane Hire: 40-ton to 60-ton mobile cranes, forklifts and telehandlers for hire anywhere in South Africa. Call 013 241 1017 or request a quote.";
+  "Jabula Crane Hire: 40-ton to 60-ton mobile cranes, forklifts and telehandlers for hire. Call 013 241 1017 or request a quote.";
 
 const quoteCta = { label: "Request a Quote", href: "/contact#quote" };
 
@@ -100,7 +100,7 @@ export const defaultContent: SiteContent = {
       ],
       copyright: "Jabula Crane Hire (Pty) Ltd © 2026. Reg. 2026/337560. All rights reserved.",
       statement:
-        "Reliable equipment. Professional service. Safe lifting. Cranes, forklifts and telehandlers for sites across South Africa.",
+        "Reliable equipment. Professional service. Safe lifting. Cranes, forklifts and telehandlers.",
       cta: quoteCta,
     },
     actionBar: {
@@ -131,12 +131,12 @@ export const defaultContent: SiteContent = {
 
   pages: {
     home: {
-      seo: { title: "Crane Hire, Forklifts & Telehandlers in South Africa | Jabula Crane Hire", description },
+      seo: { title: "Crane Hire, Forklifts & Telehandlers | Jabula Crane Hire", description },
       sections: {
         hero: {
           title: "Powering Every Lift. Moving Every Project.",
           primary: { label: "Request a Quote", href: "#quote" },
-          highlights: ["Qualified Operators", "Daily to Long-Term Hire", "Anywhere in South Africa"],
+          highlights: ["Qualified Operators", "Daily to Long-Term Hire", "Safety-First Lifting"],
           callLabel: "Call Now",
           image: { src: site.images.hero, alt: "Yellow mobile crane on an open road at dusk" },
           equipmentCard: {

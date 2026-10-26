@@ -1,6 +1,6 @@
 import { useEffect, useState, type ReactNode } from "react";
 import type { Session } from "@supabase/supabase-js";
-import { FileText, Images, LayoutDashboard, LogOut, Menu as MenuIcon, Settings, Truck, Users as UsersIcon, X } from "lucide-react";
+import { BriefcaseBusiness, FileText, Images, LayoutDashboard, LogOut, Menu as MenuIcon, Settings, Truck, Users as UsersIcon, X } from "lucide-react";
 import { pageSchema } from "../content/schema";
 import type { PageSlug } from "../content/types";
 import { CmsDataProvider, type Profile, useStore } from "./data";
@@ -11,6 +11,7 @@ import { Login, NoAccess, NotConfigured, SetPassword } from "./screens/Login";
 import { Overview } from "./screens/Overview";
 import { PageEditor } from "./screens/PageEditor";
 import { SettingsScreen } from "./screens/SettingsScreen";
+import { StationeryScreen } from "./screens/StationeryScreen";
 import { Users } from "./screens/Users";
 import { friendlyError, supabase } from "./supabase";
 import { ConfirmProvider, ToastProvider } from "./ui";
@@ -127,6 +128,7 @@ function Shell() {
         { href: "/admin/equipment", label: "Equipment", icon: Truck, match: (p) => p.startsWith("/admin/equipment") },
         { href: "/admin/settings", label: "Business details", icon: Settings, match: (p) => p === "/admin/settings" },
         { href: "/admin/media", label: "Media library", icon: Images, match: (p) => p === "/admin/media" },
+        { href: "/admin/stationery", label: "Corporate stationery", icon: BriefcaseBusiness, match: (p) => p === "/admin/stationery" },
         ...(store.profile.role === "owner"
           ? [{ href: "/admin/users", label: "Users", icon: UsersIcon, match: (p: string) => p === "/admin/users" }]
           : []),
@@ -214,6 +216,7 @@ function Screen({ path }: { path: string }) {
   if (equipment) return <EquipmentEditor key={equipment[1]} id={equipment[1]} />;
   if (path === "/admin/settings") return <SettingsScreen />;
   if (path === "/admin/media") return <MediaLibrary />;
+  if (path === "/admin/stationery") return <StationeryScreen />;
   if (path === "/admin/users" && profile.role === "owner") return <Users />;
   return (
     <p>

@@ -5,6 +5,8 @@ import tailwindcss from "@tailwindcss/vite";
 
 export default defineConfig({
   plugins: [react(), tailwindcss()],
+  // Office files in /logos are offered as downloads in the dashboard.
+  assetsInclude: ["**/*.docx", "**/*.xlsx"],
   resolve: {
     alias: {
       "@": fileURLToPath(new URL("./src", import.meta.url)),

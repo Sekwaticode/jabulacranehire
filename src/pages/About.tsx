@@ -1,6 +1,7 @@
 import { Check, Download } from "lucide-react";
 import PageHeader from "../components/PageHeader";
 import CtaBanner from "../components/sections/CtaBanner";
+import WhoWeAre from "../components/sections/WhoWeAre";
 import WhyChoose from "../components/sections/WhyChoose";
 import Reveal from "../components/ui/Reveal";
 import {
@@ -19,24 +20,14 @@ const cardTitle =
 
 export default function About() {
   const { settings, pages } = useContent();
-  const { header, intro, visionMission, commitment, quality, clients, credentials, cta } = pages.about.sections;
+  const { header, visionMission, commitment, quality, clients, credentials, cta } = pages.about.sections;
   const { rows, companyProfilePdf } = settings.credentials;
 
   return (
     <>
       <PageHeader {...header} />
 
-      {/* Who we are */}
-      <section className={`bg-jch-ink text-jch-bg ${sectionPad}`}>
-        <div className={`${container} grid grid-cols-[1fr_1.4fr] gap-16 max-[960px]:grid-cols-1 max-[960px]:gap-8`}>
-          <SectionHeading tone="light" eyebrow={intro.eyebrow} title={intro.title} />
-          <Reveal className="flex flex-col gap-6 text-xl leading-[1.6] max-[640px]:text-lg">
-            {intro.paragraphs.map((paragraph) => (
-              <p key={paragraph}>{paragraph}</p>
-            ))}
-          </Reveal>
-        </div>
-      </section>
+      <WhoWeAre />
 
       {/* Vision and mission */}
       <section className={`bg-jch-bg text-jch-ink ${sectionPad}`}>
