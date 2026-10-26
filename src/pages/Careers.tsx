@@ -2,6 +2,7 @@ import { Check } from "lucide-react";
 import PageHeader from "../components/PageHeader";
 import CtaBanner from "../components/sections/CtaBanner";
 import Teams from "../components/sections/Teams";
+import Reveal from "../components/ui/Reveal";
 import { container, SectionHeading, sectionPad } from "../components/ui/primitives";
 import { useContent } from "../content/ContentContext";
 import { whatsappUrl } from "../content/links";
@@ -17,11 +18,11 @@ export default function Careers() {
       <section className={`bg-jch-ink text-jch-bg ${sectionPad}`}>
         <div className={`${container} grid grid-cols-[1fr_1.4fr] gap-16 max-[960px]:grid-cols-1 max-[960px]:gap-8`}>
           <SectionHeading tone="light" eyebrow={intro.eyebrow} title={intro.title} />
-          <div className="flex flex-col gap-6 text-xl leading-[1.6] max-[640px]:text-lg">
+          <Reveal className="flex flex-col gap-6 text-xl leading-[1.6] max-[640px]:text-lg">
             {intro.paragraphs.map((paragraph) => (
               <p key={paragraph}>{paragraph}</p>
             ))}
-          </div>
+          </Reveal>
         </div>
       </section>
 
@@ -35,7 +36,7 @@ export default function Careers() {
             title={expectations.title}
             lead={expectations.lead}
           />
-          <ul className="border-t border-jch-bg/15">
+          <Reveal as="ul" stagger={0.06} y={16} className="border-t border-jch-bg/15">
             {expectations.items.map((item) => (
               <li
                 key={item}
@@ -45,7 +46,7 @@ export default function Careers() {
                 {item}
               </li>
             ))}
-          </ul>
+          </Reveal>
         </div>
       </section>
 

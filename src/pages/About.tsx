@@ -2,6 +2,7 @@ import { Check, Download } from "lucide-react";
 import PageHeader from "../components/PageHeader";
 import CtaBanner from "../components/sections/CtaBanner";
 import WhyChoose from "../components/sections/WhyChoose";
+import Reveal from "../components/ui/Reveal";
 import {
   btn,
   container,
@@ -29,17 +30,17 @@ export default function About() {
       <section className={`bg-jch-ink text-jch-bg ${sectionPad}`}>
         <div className={`${container} grid grid-cols-[1fr_1.4fr] gap-16 max-[960px]:grid-cols-1 max-[960px]:gap-8`}>
           <SectionHeading tone="light" eyebrow={intro.eyebrow} title={intro.title} />
-          <div className="flex flex-col gap-6 text-xl leading-[1.6] max-[640px]:text-lg">
+          <Reveal className="flex flex-col gap-6 text-xl leading-[1.6] max-[640px]:text-lg">
             {intro.paragraphs.map((paragraph) => (
               <p key={paragraph}>{paragraph}</p>
             ))}
-          </div>
+          </Reveal>
         </div>
       </section>
 
       {/* Vision and mission */}
       <section className={`bg-jch-bg text-jch-ink ${sectionPad}`}>
-        <div className={`${container} grid grid-cols-2 gap-6 max-[960px]:grid-cols-1`}>
+        <Reveal stagger={0.12} className={`${container} grid grid-cols-2 gap-6 max-[960px]:grid-cols-1`}>
           <article className={cardClass}>
             <h2 className={cardTitle}>{visionMission.visionLabel}</h2>
             <p className="font-tight text-[clamp(1.5rem,2.2vw,2rem)] leading-[1.25] font-medium tracking-[-0.01em]">
@@ -61,18 +62,18 @@ export default function About() {
               ))}
             </ul>
           </article>
-        </div>
+        </Reveal>
       </section>
 
       {/* Our service commitment */}
       <section className={`bg-jch-ink text-jch-bg ${sectionPad}`}>
         <div className={`${container} flex flex-col gap-12`}>
           <SectionHeading tone="light" eyebrow={commitment.eyebrow} title={commitment.title} />
-          <div className="grid grid-cols-2 gap-10 text-lg leading-[1.65] text-jch-dim max-[960px]:grid-cols-1 max-[960px]:gap-6">
+          <Reveal className="grid grid-cols-2 gap-10 text-lg leading-[1.65] text-jch-dim max-[960px]:grid-cols-1 max-[960px]:gap-6">
             {commitment.paragraphs.map((paragraph) => (
               <p key={paragraph}>{paragraph}</p>
             ))}
-          </div>
+          </Reveal>
         </div>
       </section>
 
@@ -84,7 +85,7 @@ export default function About() {
             title={quality.title}
             lead={quality.lead}
           />
-          <ul className="grid grid-cols-4 gap-4 max-[1100px]:grid-cols-2 max-[520px]:grid-cols-1">
+          <Reveal as="ul" stagger={0.06} className="grid grid-cols-4 gap-4 max-[1100px]:grid-cols-2 max-[520px]:grid-cols-1">
             {quality.items.map((item) => (
               <li
                 key={item}
@@ -94,7 +95,7 @@ export default function About() {
                 {item}
               </li>
             ))}
-          </ul>
+          </Reveal>
         </div>
       </section>
 
@@ -108,7 +109,7 @@ export default function About() {
             eyebrow={clients.eyebrow}
             title={clients.title}
           />
-          <ul className="flex flex-wrap gap-3">
+          <Reveal as="ul" stagger={0.04} y={14} className="flex flex-wrap gap-3">
             {clients.items.map((client) => (
               <li
                 key={client}
@@ -117,7 +118,7 @@ export default function About() {
                 {client}
               </li>
             ))}
-          </ul>
+          </Reveal>
         </div>
       </section>
 
@@ -144,7 +145,7 @@ export default function About() {
           </div>
           <table className="w-full border-collapse self-start text-left">
             <caption className="sr-only">{settings.business.name} company credentials</caption>
-            <tbody>
+            <Reveal as="tbody" stagger={0.05} y={12}>
               {rows.map((row) => (
                 <tr key={row.label} className="border-b border-jch-bg/15 first:border-t">
                   <th scope="row" className="w-1/2 py-5 pr-6 align-top font-tight font-semibold uppercase max-[640px]:text-sm">
@@ -155,7 +156,7 @@ export default function About() {
                   </td>
                 </tr>
               ))}
-            </tbody>
+            </Reveal>
           </table>
         </div>
       </section>

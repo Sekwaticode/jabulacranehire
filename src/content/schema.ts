@@ -91,13 +91,21 @@ export const pageSchema: Record<PageSlug, { label: string; path: string; section
         component: "HomeHero",
         label: "1. Hero",
         fields: [
-          t("eyebrow", "Small heading above the title", { max: 120 }),
-          t("title", "Main heading", { max: 120 }),
-          para("lead", "Intro line", { max: 300 }),
+          t("title", "Main heading", { max: 120, help: "Each sentence starts a new line." }),
           link("primary", "Main button"),
-          link("secondary", "Second button"),
-          t("callLabel", "Call link words", { max: 40, help: "Shown before the office number, under the buttons." }),
-          image("image", "Background photo", "Sits behind the crane, darkened. Without a photo the built-in site photo shows."),
+          list("highlights", "Ticks along the bottom", "Highlight", { max: 4 }),
+          t("callLabel", "Call link words", { max: 40, help: "Shown before the office number, bottom right." }),
+          image("image", "Background photo", "Darkened toward the bottom so the heading stays readable."),
+          {
+            kind: "group",
+            key: "equipmentCard",
+            label: "Equipment card (bottom right)",
+            fields: [
+              t("title", "Card heading", { max: 80 }),
+              link("link", "Card link"),
+              image("image", "Card picture", "A machine on a plain or see-through background works best."),
+            ],
+          },
         ],
       },
       {
@@ -378,12 +386,6 @@ export const pageSchema: Record<PageSlug, { label: string; path: string; section
         fields: [t("title", "Panel heading", { max: 60 })],
       },
       {
-        key: "serviceArea",
-        component: "ServiceArea",
-        label: "Service area",
-        fields: [...heading, para("note", "Note under the intro", { max: 400 }), link("button", "Button")],
-      },
-      {
         key: "faqs",
         component: "Faqs",
         label: "FAQs",
@@ -450,7 +452,6 @@ export const settingsSchema: SettingDef[] = [
       list("addressLines", "Address", "Line", { max: 4 }),
       t("mapQuery", "Address for the map", { max: 200, help: "What Google Maps searches for on the Contact page." }),
       t("hours", "Operating hours", { max: 120 }),
-      list("provinces", "Provinces served", "Province", { max: 9 }),
     ],
   },
   {

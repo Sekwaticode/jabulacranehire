@@ -82,7 +82,6 @@ URLs only: it cannot choose a component, add HTML, run code or change styles. Th
 | Contact (`/contact`) | `header` | Page header | `PageHeader` |
 | Contact (`/contact`) | `quote` | Quote request panel | `QuoteForm` |
 | Contact (`/contact`) | `reachUs` | Reach us directly | `ContactDetails` |
-| Contact (`/contact`) | `serviceArea` | Service area | `ServiceArea` |
 | Contact (`/contact`) | `faqs` | FAQs | `Faqs` |
 
 Equipment rows (`equipment`) fill `EquipmentGrid` cards and their pop-up on Home and Equipment, the `Applications`

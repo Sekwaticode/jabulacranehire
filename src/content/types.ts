@@ -30,7 +30,6 @@ export type BusinessSettings = {
   addressLines: string[];
   mapQuery: string;
   hours: string;
-  provinces: string[];
 };
 
 export type EquipmentSpec = {
@@ -116,7 +115,14 @@ export type PageHeaderContent = Heading & { image: Img };
 export type CtaBannerContent = { title: string; callLabel: string; action: Link };
 
 export type HomeSections = {
-  hero: { eyebrow: string; title: string; lead: string; primary: Link; secondary: Link; callLabel: string; image: Img };
+  hero: {
+    title: string;
+    primary: Link;
+    highlights: string[];
+    callLabel: string;
+    image: Img;
+    equipmentCard: { title: string; link: Link; image: Img };
+  };
   trust: { items: string[] };
   equipment: Heading & { button: Link };
   industries: { eyebrow: string; title: string; items: { name: string; text: string; icon: string }[] };
@@ -164,6 +170,5 @@ export type ContactSections = {
   header: PageHeaderContent;
   quote: { title: string; privacyTitle: string; privacyText: string };
   reachUs: { title: string };
-  serviceArea: Heading & { note: string; button: Link };
   faqs: Heading & { items: { q: string; a: string }[] };
 };

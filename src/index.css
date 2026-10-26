@@ -17,3 +17,27 @@
 
   --ease-jch: cubic-bezier(0.22, 1, 0.36, 1);
 }
+
+/* Page banner photo eases out of a slight zoom as the page opens */
+@keyframes jch-settle {
+  from {
+    transform: scale(1.08);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+/* Banner logo slashes rise into place one after another */
+@keyframes jch-slash-in {
+  from {
+    transform: translateY(40%) skewX(-20deg);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0) skewX(-20deg);
+    opacity: 1;
+  }
+}

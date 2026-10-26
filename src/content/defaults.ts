@@ -20,7 +20,7 @@ import {
 import type { SiteContent } from "./types";
 
 const description =
-  "Jabula Crane Hire: 40-ton to 60-ton mobile cranes, forklifts and telehandlers for hire in Mpumalanga, Gauteng and Limpopo. Call 013 241 1017 or request a quote.";
+  "Jabula Crane Hire: 40-ton to 60-ton mobile cranes, forklifts and telehandlers for hire anywhere in South Africa. Call 013 241 1017 or request a quote.";
 
 const quoteCta = { label: "Request a Quote", href: "/contact#quote" };
 
@@ -42,7 +42,6 @@ export const defaultContent: SiteContent = {
       addressLines: [...site.addressLines],
       mapQuery: site.mapQuery,
       hours: site.hours,
-      provinces: [...site.provinces],
     },
     credentials: {
       rows: site.credentials.map((row) => ({ ...row })),
@@ -66,7 +65,6 @@ export const defaultContent: SiteContent = {
         ],
         [
           { label: "FAQs", href: "/contact#faqs" },
-          { label: "Service Area", href: "/contact#service-area" },
         ],
       ],
       callLabel: "Call",
@@ -80,7 +78,6 @@ export const defaultContent: SiteContent = {
             { label: "About Us", href: "/about" },
             { label: "Equipment", href: "/equipment" },
             { label: "Careers", href: "/careers" },
-            { label: "Service Areas", href: "/contact#service-area" },
           ],
         },
         {
@@ -103,7 +100,7 @@ export const defaultContent: SiteContent = {
       ],
       copyright: "Jabula Crane Hire (Pty) Ltd © 2026. Reg. 2026/337560. All rights reserved.",
       statement:
-        "Reliable equipment. Professional service. Safe lifting. Cranes, forklifts and telehandlers for Mpumalanga, Gauteng and Limpopo.",
+        "Reliable equipment. Professional service. Safe lifting. Cranes, forklifts and telehandlers for sites across South Africa.",
       cta: quoteCta,
     },
     actionBar: {
@@ -134,16 +131,19 @@ export const defaultContent: SiteContent = {
 
   pages: {
     home: {
-      seo: { title: "Crane Hire, Forklifts & Telehandlers in Mpumalanga | Jabula Crane Hire", description },
+      seo: { title: "Crane Hire, Forklifts & Telehandlers in South Africa | Jabula Crane Hire", description },
       sections: {
         hero: {
-          eyebrow: "Jabula Crane Hire | Lifting Solutions",
           title: "Powering Every Lift. Moving Every Project.",
-          lead: "Reliable mobile crane hire and professional lifting solutions for construction, industrial, and infrastructure projects across Mpumalanga, Gauteng, and Limpopo.",
           primary: { label: "Request a Quote", href: "#quote" },
-          secondary: { label: "Explore Our Equipment", href: "#equipment" },
+          highlights: ["Qualified Operators", "Daily to Long-Term Hire", "Anywhere in South Africa"],
           callLabel: "Call Now",
-          image: { src: site.images.hero, alt: "Building under construction" },
+          image: { src: site.images.hero, alt: "Yellow mobile crane on an open road at dusk" },
+          equipmentCard: {
+            title: "Cranes, forklifts and telehandlers for every lift.",
+            link: { label: "Explore Our Equipment", href: "#equipment" },
+            image: { src: "/Yale_Forklift_in_Industrial_Yard.png", alt: "" },
+          },
         },
         trust: { items: [...trustFacts] },
         equipment: {
@@ -315,13 +315,6 @@ export const defaultContent: SiteContent = {
             "We use the details you send only to respond to your enquiry and prepare your quotation. You can ask us to update or delete them at any time.",
         },
         reachUs: { title: "Reach us directly" },
-        serviceArea: {
-          eyebrow: "Service area",
-          title: "Mpumalanga first. Gauteng and Limpopo too.",
-          lead: "We work from Witbank, so sites across Mpumalanga are our primary service area, with Gauteng and Limpopo also covered.",
-          note: "Further afield? Mobilisation outside these provinces can be arranged, subject to project requirements and transport costs.",
-          button: { label: "Check if we cover your site", href: "#quote" },
-        },
         faqs: {
           eyebrow: "FAQs",
           title: "Questions we get asked",

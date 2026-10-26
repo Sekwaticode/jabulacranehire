@@ -120,6 +120,8 @@ await step("Owner signs in and sees the overview stats", async () => {
 });
 
 const hero = () => page.locator("section#hero");
+// The hero has two image slots (background and equipment card); these steps use the background.
+const heroPhoto = () => hero().getByRole("group", { name: "Background photo", exact: true });
 async function openHero() {
   await page.goto(SITE + "/admin/pages/home");
   const toggle = page.getByRole("button", { name: /1\. Hero/ });
@@ -189,7 +191,7 @@ await step("History restores an earlier published version", async () => {
 });
 
 await step("Non-image files are rejected on upload", async () => {
-  await hero().getByRole("button", { name: "Add image" }).click();
+  await heroPhoto().getByRole("button", { name: /^(Add|Replace) image$/ }).click();
   await dialog(page).getByLabel("Upload a new image").setInputFiles(`${tmp}/fake.png`);
   await page.getByRole("alert").filter({ hasText: /JPEG|PNG|WebP|image/i }).first().waitFor({ timeout: 8000 });
 });
@@ -198,7 +200,7 @@ let photoUrl;
 await step("Uploading an image and publishing shows it on the live site", async () => {
   await dialog(page).getByLabel("Upload a new image").setInputFiles(`${tmp}/test-photo.png`);
   await toast(page, "Image uploaded");
-  await hero().getByLabel("Image description (alt text)").fill("Blue test photo");
+  await heroPhoto().getByLabel("Image description (alt text)").fill("Blue test photo");
   await hero().getByRole("button", { name: "Save and publish" }).click();
   await toast(page, "Published");
   const p = await newPage();
@@ -218,7 +220,7 @@ await step("An image in use can't be deleted", async () => {
 
 await step("Replacing the image: remove from hero, then delete it from the library", async () => {
   await openHero();
-  await hero().getByRole("button", { name: "Remove", exact: true }).click();
+  await heroPhoto().getByRole("button", { name: "Remove", exact: true }).click();
   await hero().getByLabel("Main heading").fill(originalTitle);
   await hero().getByRole("button", { name: "Save and publish" }).click();
   await toast(page, "Published");

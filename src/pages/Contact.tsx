@@ -3,7 +3,7 @@ import ContactDetails from "../components/ContactDetails";
 import PageHeader from "../components/PageHeader";
 import QuoteForm from "../components/QuoteForm";
 import Faqs from "../components/sections/Faqs";
-import ServiceArea from "../components/sections/ServiceArea";
+import Reveal from "../components/ui/Reveal";
 import { container, h2Class } from "../components/ui/primitives";
 import { equipmentOptions, useContent } from "../content/ContentContext";
 
@@ -26,7 +26,7 @@ export default function Contact() {
       <PageHeader {...header} />
 
       <section className="bg-jch-bg pb-28 text-jch-ink max-[960px]:pb-20 max-[640px]:pb-16">
-        <div className={`${container} grid grid-cols-[1.5fr_1fr] items-start gap-8 max-[1100px]:grid-cols-1`}>
+        <Reveal stagger={0.15} className={`${container} grid grid-cols-[1.5fr_1fr] items-start gap-8 max-[1100px]:grid-cols-1`}>
           <div id="quote" className="rounded-2xl border border-jch-line bg-jch-panel p-10 max-[640px]:p-6">
             <h2 className={`${h2Class} mb-8 text-[clamp(1.75rem,3vw,2.5rem)]`}>{quote.title}</h2>
             <QuoteForm
@@ -46,7 +46,7 @@ export default function Contact() {
             </h2>
             <ContactDetails full />
           </aside>
-        </div>
+        </Reveal>
       </section>
 
       <section aria-label="Where to find us" className="bg-jch-bg">
@@ -58,8 +58,6 @@ export default function Contact() {
           className="block h-[460px] w-full border-0 max-[640px]:h-[340px]"
         />
       </section>
-
-      <ServiceArea />
 
       <Faqs />
     </>

@@ -3,6 +3,7 @@ import { Check } from "lucide-react";
 import EquipmentGrid from "../components/EquipmentGrid";
 import PageHeader from "../components/PageHeader";
 import CtaBanner from "../components/sections/CtaBanner";
+import Reveal from "../components/ui/Reveal";
 import { container, SectionHeading, sectionPad } from "../components/ui/primitives";
 import { useContent } from "../content/ContentContext";
 import { PageScrollContext } from "../lib/pageScroll";
@@ -38,7 +39,7 @@ export default function Equipment() {
             eyebrow={applications.eyebrow}
             title={applications.title}
           />
-          <div className="grid grid-cols-3 gap-6 max-[960px]:grid-cols-1">
+          <Reveal stagger={0.1} className="grid grid-cols-3 gap-6 max-[960px]:grid-cols-1">
             {equipment.map((item) => (
               <article
                 key={item.id}
@@ -57,7 +58,7 @@ export default function Equipment() {
                 </ul>
               </article>
             ))}
-          </div>
+          </Reveal>
           <p className="max-w-[70ch] text-lg leading-[1.6] text-jch-muted">
             {applications.footnote}
           </p>

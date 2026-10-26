@@ -1,4 +1,5 @@
-import type { ReactNode } from "react";
+import { type ReactNode, useRef } from "react";
+import { useHeadingReveal } from "./Reveal";
 
 // Horizontal padding matches the footer so page content lines up with it.
 export const container =
@@ -36,9 +37,10 @@ export function Eyebrow({
 }) {
   return (
     <p
-      className={`flex items-center gap-3 font-tight text-[13px] font-semibold tracking-[0.22em] uppercase before:h-0.5 before:w-8 before:shrink-0 before:bg-jch-orange ${tone === "dark" ? "text-jch-muted" : "text-jch-dim"}`}
+      className={`flex items-center gap-3 font-tight text-[13px] font-semibold tracking-[0.22em] uppercase ${tone === "dark" ? "text-jch-muted" : "text-jch-dim"}`}
     >
-      {children}
+      <span aria-hidden data-reveal-bar className="h-0.5 w-8 shrink-0 bg-jch-orange" />
+      <span data-reveal-fade>{children}</span>
     </p>
   );
 }
@@ -54,12 +56,15 @@ export function SectionHeading({
   lead?: string;
   tone?: Tone;
 }) {
+  const ref = useRef<HTMLDivElement>(null);
+  useHeadingReveal(ref, { key: title });
   return (
-    <div className="flex max-w-[760px] flex-col gap-5">
+    <div ref={ref} className="flex max-w-[760px] flex-col gap-5">
       <Eyebrow tone={tone}>{eyebrow}</Eyebrow>
-      <h2 className={h2Class}>{title}</h2>
+      <h2 data-reveal-title className={h2Class}>{title}</h2>
       {lead && (
         <p
+          data-reveal-fade
           className={`max-w-[60ch] text-lg leading-[1.6] max-[640px]:text-base ${tone === "dark" ? "text-jch-muted" : "text-jch-dim"}`}
         >
           {lead}

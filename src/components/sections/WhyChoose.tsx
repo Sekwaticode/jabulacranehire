@@ -1,5 +1,6 @@
 import { useContent } from "../../content/ContentContext";
 import { container, SectionHeading, sectionPad } from "../ui/primitives";
+import Reveal from "../ui/Reveal";
 
 export default function WhyChoose() {
   const { eyebrow, title, reasons } = useContent().pages.about.sections.whyChoose;
@@ -11,7 +12,7 @@ export default function WhyChoose() {
           eyebrow={eyebrow}
           title={title}
         />
-        <ol className="grid grid-cols-3 gap-x-10 gap-y-12 max-[960px]:grid-cols-2 max-[560px]:grid-cols-1">
+        <Reveal as="ol" stagger={0.08} className="grid grid-cols-3 gap-x-10 gap-y-12 max-[960px]:grid-cols-2 max-[560px]:grid-cols-1">
           {reasons.map((reason, i) => (
             <li key={reason.title} className="flex flex-col gap-3 border-t-2 border-jch-bg pt-5">
               <span className="font-poppins text-sm font-semibold text-jch-dim">
@@ -23,7 +24,7 @@ export default function WhyChoose() {
               <p className="leading-[1.55] text-jch-dim">{reason.text}</p>
             </li>
           ))}
-        </ol>
+        </Reveal>
       </div>
     </section>
   );

@@ -25,7 +25,6 @@ export const site = {
   mapQuery:
     "168 Catfish Crescent, Clearwater Eco Estate, Jackaroo Park, Witbank, 1035",
   hours: "Monday – Friday: 07:00 – 17:00",
-  provinces: ["Mpumalanga", "Gauteng", "Limpopo"],
 
   credentials: [
     { label: "Registered company name", value: "Jabula Crane Hire (Pty) Ltd" },
@@ -49,7 +48,7 @@ export const site = {
 
   /** Site photos. While empty, a branded panel is shown in each slot. */
   images: {
-    hero: "/images/hero-site.jpg",
+    hero: "/images/hero-crane.jpg",
     safety: "",
     about: "",
   },
@@ -82,7 +81,7 @@ export const trustFacts = [
   "Up to 60-ton capacity",
   "Operators available",
   "Daily to long-term hire",
-  "Mpumalanga, Gauteng & Limpopo",
+  "Anywhere in South Africa",
 ];
 
 // `image` needs the file's real pixel size so the expanding card can keep the
@@ -323,7 +322,7 @@ export const faqs = [
   },
   {
     q: "How is transport charged?",
-    a: "Mobilisation is quoted together with the hire and depends on where your site is. Sites outside Mpumalanga, Gauteng and Limpopo can be arranged, subject to project requirements and transport costs.",
+    a: "Mobilisation is quoted together with the hire and depends on where your site is.",
   },
   {
     q: "What do you need from me for a quote?",
@@ -331,7 +330,7 @@ export const faqs = [
   },
   {
     q: "Which areas do you cover?",
-    a: "Mpumalanga is our primary service area, and we also work in Gauteng and Limpopo. Ask us about sites further afield.",
+    a: "We work anywhere in South Africa. We are based in Witbank, and transport to your site is quoted with the hire.",
   },
   {
     q: "Can you help plan the lift?",
