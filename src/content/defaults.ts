@@ -94,7 +94,7 @@ export const defaultContent: SiteContent = {
       whatsappLabel: "WhatsApp",
       social: [],
       legal: [
-        { label: "Privacy Notice", href: "/contact#privacy" },
+        { label: "Privacy Policy", href: "/privacy" },
         { label: "Hire Terms", href: "/#hire-options" },
         { label: "Health & Safety", href: "/#safety" },
       ],

@@ -36,9 +36,9 @@ them a role.
 
 **Authentication → URL Configuration**:
 
-- **Site URL**: `https://jabulacranehire.netlify.app/admin`
-- **Redirect URLs**: add `https://jabulacranehire.netlify.app/admin` (and later your own domain, e.g.
-  `https://www.jabulacranehire.co.za/admin`, if you move to one).
+- **Site URL**: `https://jabulacranes-hire.co.za/admin`
+- **Redirect URLs**: add `https://jabulacranes-hire.co.za/admin`. The old `jabulacranehire.netlify.app` address
+  now redirects to the domain, so remove it from this list.
 
 Invite and password-reset emails then bring people back to the dashboard to choose a password.
 

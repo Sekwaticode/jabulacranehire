@@ -12,19 +12,34 @@ import About from "./pages/About";
 import Contact from "./pages/Contact";
 import Equipment from "./pages/Equipment";
 import Careers from "./pages/Careers";
+import Privacy from "./pages/Privacy";
 import { initAnalytics, track } from "./lib/analytics";
 import { PageScrollContext, type PageScroll } from "./lib/pageScroll";
 import { useContent } from "./content/ContentContext";
 import type { PageSlug } from "./content/types";
 
+// The address search engines should treat as the original of every page.
+const SITE_URL = "https://jabulacranes-hire.co.za";
+
+type Seo = { title: string; description: string };
+
 // Page titles and descriptions come from the CMS (`seo` on each page).
+// The privacy policy isn't in the CMS, so it carries its own.
+// New pages also need a line in public/_redirects and public/sitemap.xml.
 const routes = {
   "/": { Page: Home, slug: "home" },
   "/about": { Page: About, slug: "about" },
   "/equipment": { Page: Equipment, slug: "equipment" },
   "/careers": { Page: Careers, slug: "careers" },
   "/contact": { Page: Contact, slug: "contact" },
-} satisfies Record<string, { Page: () => JSX.Element; slug: PageSlug }>;
+  "/privacy": {
+    Page: Privacy,
+    seo: {
+      title: "Privacy Policy | Jabula Crane Hire",
+      description: "How Jabula Crane Hire collects, uses and protects your personal information under POPIA.",
+    },
+  },
+} satisfies Record<string, { Page: () => JSX.Element; slug?: PageSlug; seo?: Seo }>;
 
 type RoutePath = keyof typeof routes;
 
@@ -249,9 +264,15 @@ export default function App() {
 
   // On every page change: set the title, reset the scroll, then honour a hash.
   useEffect(() => {
-    const { seo } = content.pages[routes[route].slug];
+    const page = routes[route];
+    const seo: Seo = "slug" in page ? content.pages[page.slug].seo : page.seo;
     document.title = seo.title;
     document.querySelector('meta[name="description"]')?.setAttribute("content", seo.description);
+    const url = SITE_URL + route;
+    document.querySelector('link[rel="canonical"]')?.setAttribute("href", url);
+    document.querySelector('meta[property="og:url"]')?.setAttribute("content", url);
+    document.querySelector('meta[property="og:title"]')?.setAttribute("content", seo.title);
+    document.querySelector('meta[property="og:description"]')?.setAttribute("content", seo.description);
     track("page_view", { page_path: route, page_title: seo.title });
 
     lenisRef.current?.resize();

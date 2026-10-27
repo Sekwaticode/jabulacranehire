@@ -1,1 +1,15 @@
-/*  /index.html  200
+# The old Netlify address sends visitors and search engines to the real domain.
+https://jabulacranehire.netlify.app/*  https://jabulacranes-hire.co.za/:splat  301!
+
+# Site pages. The app switches between them in the browser.
+/            /index.html  200
+/about       /index.html  200
+/equipment   /index.html  200
+/careers     /index.html  200
+/contact     /index.html  200
+/privacy     /index.html  200
+/admin       /index.html  200
+/admin/*     /index.html  200
+
+# Any other address still shows the site, but tells search engines the page doesn't exist.
+/*           /index.html  404

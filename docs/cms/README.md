@@ -1,6 +1,6 @@
 # Website content management (Supabase)
 
-The public site at https://jabulacranehire.netlify.app looks and behaves exactly as before. Its words, links,
+The public site at https://jabulacranes-hire.co.za looks and behaves exactly as before. Its words, links,
 images, equipment and business details now come from Supabase, and the owner edits them at `/admin`.
 
 - [SETUP.md](SETUP.md): create the Supabase project, run the migrations, add the first owner.
