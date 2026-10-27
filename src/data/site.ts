@@ -51,7 +51,7 @@ export const site = {
   quoteFormAcceptsFiles: false,
 
   /** GA4 measurement ID, e.g. "G-XXXXXXXXXX". Tracking stays off while empty. */
-  ga4MeasurementId: "",
+  ga4MeasurementId: "G-Q3YQP9PWXG",
 
   /** Site photos. While empty, a branded panel is shown in each slot. */
   images: {
