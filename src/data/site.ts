@@ -16,7 +16,7 @@ export const site = {
   mobile: { display: "079 953 4581", href: "tel:+27799534581" },
   whatsappNumber: "27799534581",
   whatsappMessage: "Hi Jabula, I need a crane for…",
-  email: "",
+  email: "info@jabulacranes-hire.co.za",
 
   addressLines: [
     "168 Catfish Crescent, Clearwater Eco Estate",
@@ -41,7 +41,14 @@ export const site = {
 
   /** Form endpoint that emails the sales team (Formspree, Web3Forms, etc.).
       While empty, the quote form sends the request through WhatsApp instead. */
-  quoteFormEndpoint: "",
+  quoteFormEndpoint: "https://api.web3forms.com/submit",
+
+  /** Web3Forms public access key. It is safe in the browser: it only lets
+      people send messages to the inbox it was registered with. */
+  quoteFormAccessKey: "8112778f-6b4a-4472-b7a4-ef8a53045240",
+
+  /** File uploads need a paid Web3Forms plan. Leave false on the free plan. */
+  quoteFormAcceptsFiles: false,
 
   /** GA4 measurement ID, e.g. "G-XXXXXXXXXX". Tracking stays off while empty. */
   ga4MeasurementId: "",

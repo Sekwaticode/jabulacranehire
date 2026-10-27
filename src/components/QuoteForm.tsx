@@ -97,6 +97,19 @@ export default function QuoteForm({
       return;
     }
 
+    // Spam trap: real visitors never see or fill this field.
+    if (data.get("botcheck")) return;
+    data.delete("botcheck");
+    if (developerSettings.quoteFormAccessKey) {
+      data.set("access_key", developerSettings.quoteFormAccessKey);
+      const who = String(data.get("name") ?? "").trim();
+      data.set("subject", `New quote request${who ? ` from ${who}` : ""}: ${String(data.get("equipment") ?? "")}`);
+      data.set("from_name", "Jabula Crane Hire website");
+      // Lets the sales team press Reply to answer the customer directly.
+      const email = String(data.get("email") ?? "").trim();
+      if (email) data.set("replyto", email);
+    }
+
     setStatus("sending");
     try {
       const response = await fetch(endpoint, {
@@ -104,7 +117,8 @@ export default function QuoteForm({
         body: data,
         headers: { Accept: "application/json" },
       });
-      if (!response.ok) throw new Error(`Quote request failed: ${response.status}`);
+      const result = (await response.json().catch(() => ({}))) as { success?: boolean };
+      if (!response.ok || result.success === false) throw new Error(`Quote request failed: ${response.status}`);
       track("generate_lead", { method: "form", equipment });
       setStatus("sent");
     } catch {
@@ -140,6 +154,7 @@ export default function QuoteForm({
 
   return (
     <form onSubmit={handleSubmit} className="grid grid-cols-1 gap-5 sm:grid-cols-2">
+      <input type="checkbox" name="botcheck" tabIndex={-1} autoComplete="off" aria-hidden className="hidden" />
       <Field id={id("name")} label="Name">
         <input id={id("name")} name="name" required autoComplete="name" className={inputClass} />
       </Field>
@@ -228,7 +243,7 @@ export default function QuoteForm({
       </Field>
 
       {/* Files can only travel with the emailed form, not a WhatsApp link. */}
-      {!compact && viaEmail && (
+      {!compact && viaEmail && developerSettings.quoteFormAcceptsFiles && (
         <Field id={id("files")} label="Drawings or site photos" optional wide>
           <input
             id={id("files")}
